@@ -1,5 +1,8 @@
 import express = require('express');
 import { usuarios } from './Bootstrap';
+import "reflect-metadata";
+
+
 
 // Create a new express application instance
 const app: express.Application = express();
