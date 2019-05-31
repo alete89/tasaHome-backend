@@ -1,38 +1,39 @@
-import { Usuario } from "../models/usuario";
+import { createConnection, getCustomRepository, getRepository, Repository } from "typeorm";
 import { Domicilio } from "../models/domicilio";
-import { createConnection, Connection } from "typeorm";
+import { Usuario } from "../models/usuario";
+import { RepoUsuarios } from "../repos/repoUsuarios";
 
 export class Bootstrap {
 
     usuarios: Usuario[] = []
     domicilios: Domicilio[]
     domicilioJuan: Domicilio
-    domicilioPedro: Domicilio
-    conexion: Connection
+    domicilioCeleste: Domicilio
+    repoUsuarios: RepoUsuarios
+    repoDomicilio: Repository<Domicilio>
 
     async run() {
-        await this.crearConexion()
-        await this.crearDomicilios()
-        await this.crearUsuarios()
-        await this.conexion.close()
+        try {
+            let conexion = await createConnection()
+            this.repoUsuarios = await getCustomRepository(RepoUsuarios);
+            let noHayUsuarios = await this.repoUsuarios.noHayUsuarios()
+            if (noHayUsuarios) {
+                this.repoDomicilio = await getRepository(Domicilio)
+                await this.crearDomicilios()
+                await this.crearUsuarios()
+            }
+            conexion.close()
+        }
+        catch (e) {
+            console.log(e)
+        }
     }
 
     async crearDomicilios() {
         this.domicilioJuan = new Domicilio({ descripcion: "Posadas 1515" })
-        this.domicilioPedro = new Domicilio({ descripcion: "Ayacucho 3520" })
-        this.domicilios = [this.domicilioJuan, this.domicilioPedro]
-        await this.guardarDomiclios()
-
-    }
-
-    async guardarDomiclios() {
-        try {
-            // let conexion = await this.crearConexion()
-            await this.conexion.manager.save(this.domicilios)
-            // conexion.close()
-        } catch (e) {
-            console.log(e)
-        }
+        this.domicilioCeleste = new Domicilio({ descripcion: "Ayacucho 3520" })
+        this.domicilios = [this.domicilioJuan, this.domicilioCeleste]
+        await this.repoDomicilio.save(this.domicilios)
     }
 
     async crearUsuarios() {
@@ -40,26 +41,14 @@ export class Bootstrap {
             nombre: "Juan", apellido: "Perez", edad: 20, email: "juanp@mail.com", genero: "Hombre", contraseña: "123",
             domicilio: this.domicilioJuan
         }),
-            // new Usuario({ nombre: "Pedro", apellido: "Gutierrez", email: "pedrog@mail.com" })
+        new Usuario({
+            nombre: "Celeste", apellido: "Cid", edad: 45, email: "celes@mail.com", genero: "Mujer", contraseña: "cel",
+            domicilio: this.domicilioCeleste
+        })
         ]
-        await this.guardarUsuarios()
-    }
-
-    async guardarUsuarios() {
-        try {
-            // let conexion = await this.crearConexion()
-            await this.conexion.manager.save(this.usuarios)
-            // this.conexion.close()
-        } catch (e) {
-            console.log(e)
-        }
-
-    }
-
-    async  crearConexion() {
-        // createConnection method will automatically read connection options
-        // from your ormconfig file or environment variables
-        this.conexion = await createConnection();
+        await this.repoUsuarios.guardarUsuarios(this.usuarios)
     }
 
 }
+
+
