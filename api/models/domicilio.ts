@@ -1,4 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm"
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Localidad } from "./localidad";
+import { Partido } from "./partido";
+import { Provincia } from "./provincia";
 
 
 @Entity()
@@ -7,13 +10,15 @@ export class Domicilio {
     id: number
     @Column()
     descripcion: String
-    // @Column()
-    // partido: String
-    // @Column()
-    // localidad: String
-    // @Column()
-    // provincia: String
-
+    @ManyToOne(type => Partido)
+    @JoinColumn({ name: "id_partido" })
+    partido: Promise<Partido>;
+    @ManyToOne(type => Localidad)
+    @JoinColumn({ name: "id_localidad" })
+    localidad: Promise<Localidad>;
+    @ManyToOne(type => Provincia)
+    @JoinColumn({ name: "id_provincia" })
+    provincia: Promise<Provincia>;
 
     constructor(init?: Partial<Domicilio>) {
         Object.assign(this, init)
