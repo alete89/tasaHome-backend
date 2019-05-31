@@ -2,8 +2,6 @@ import express = require('express');
 import "reflect-metadata";
 import { Bootstrap } from './bootstrap';
 
-
-
 // Create a new express application instance
 const app: express.Application = express();
 

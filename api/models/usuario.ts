@@ -1,6 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm"
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Domicilio } from "./domicilio";
-import { type } from "os";
 
 
 @Entity()
@@ -21,7 +20,7 @@ export class Usuario {
     contraseña: String
     @ManyToOne(type => Domicilio)
     @JoinColumn({ name: "id_domicilio" })
-    domicilio: Domicilio
+    domicilio: Promise<Domicilio>;
 
     constructor(init?: Partial<Usuario>) {
         Object.assign(this, init)
