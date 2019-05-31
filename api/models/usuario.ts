@@ -19,8 +19,8 @@ export class Usuario {
     genero: String
     @Column()
     contraseña: String
-    @ManyToOne(type => Domicilio, { onUpdate: 'CASCADE' })
-    @JoinColumn({name : "id_domicilio"})
+    @ManyToOne(type => Domicilio)
+    @JoinColumn({ name: "id_domicilio" })
     domicilio: Domicilio
 
     constructor(init?: Partial<Usuario>) {
