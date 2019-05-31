@@ -1,13 +1,16 @@
 import express = require('express');
-import { UsuariosController } from '../controllers/usuariosController';
+import { getRepository, getCustomRepository, createConnection } from 'typeorm';
+import { Usuario } from '../models/usuario';
+import { RepoUsuarios } from '../repos/repoUsuarios';
 
 // 'use strict';
 module.exports = function (app: express.Application) {
-    var usuariosController = new UsuariosController()
 
     app.route('/usuarios')
         .get(async function (req, res) {
-            res.send(await usuariosController.todosLosUsuarios());
+            let conexion = await createConnection()
+            res.send(await getCustomRepository(RepoUsuarios).todosLosUsuarios());
+            conexion.close()
         });
 
     app.route('/')
