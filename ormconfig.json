@@ -8,7 +8,7 @@
     "synchronize": true,
     "logging": true,
     "entities": [
-        "build/model/**/*.js"
+        "api/models/*.ts"
     ],
     "migrations": [],
     "subscribers": []
