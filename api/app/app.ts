@@ -5,6 +5,9 @@ import { Bootstrap } from './bootstrap';
 // Create a new express application instance
 const app: express.Application = express();
 
+app.use(express.json());       // to support JSON-encoded bodies
+app.use(express.urlencoded()); // to support URL-encoded bodies
+
 const port = process.env.PORT || 3000;
 
 const bootstrap = new Bootstrap()
