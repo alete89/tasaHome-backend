@@ -6,21 +6,26 @@ import { Provincia } from "./provincia";
 
 @Entity()
 export class Domicilio {
-    @PrimaryGeneratedColumn()
-    id: number
-    @Column()
-    descripcion: String
-    @ManyToOne(type => Partido)
-    @JoinColumn({ name: "id_partido" })
-    partido: Promise<Partido>;
-    @ManyToOne(type => Localidad)
-    @JoinColumn({ name: "id_localidad" })
-    localidad: Promise<Localidad>;
-    @ManyToOne(type => Provincia)
-    @JoinColumn({ name: "id_provincia" })
-    provincia: Promise<Provincia>;
 
     constructor(init?: Partial<Domicilio>) {
         Object.assign(this, init)
     }
+
+    @PrimaryGeneratedColumn()
+    id: number
+
+    @Column()
+    descripcion: String
+
+    @ManyToOne(type => Partido)
+    @JoinColumn({ name: "id_partido" })
+    partido: Promise<Partido>;
+
+    @ManyToOne(type => Localidad)
+    @JoinColumn({ name: "id_localidad" })
+    localidad: Promise<Localidad>;
+
+    @ManyToOne(type => Provincia)
+    @JoinColumn({ name: "id_provincia" })
+    provincia: Promise<Provincia>;
 }
