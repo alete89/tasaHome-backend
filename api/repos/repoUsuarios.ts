@@ -24,6 +24,10 @@ export class RepoUsuarios extends Repository<Usuario> {
         }
     }
 
+    async recuperarContraseña(email: String) {
+        //TODO
+    }
+
     async searchById(id: number) {
         return await this.findOne(id)
     }
@@ -42,6 +46,10 @@ export class RepoUsuarios extends Repository<Usuario> {
         } catch (e) {
             console.log(e)
         }
+    }
+
+    async contactar_usuario(email: String, mensaje: String) {
+        //TODO
     }
 
 }
