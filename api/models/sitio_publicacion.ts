@@ -1,9 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Provincia {
+export class SitioPublicacion {
 
-    constructor(init?: Partial<Provincia>) {
+    constructor(init?: Partial<SitioPublicacion>) {
         Object.assign(this, init)
     }
    
@@ -11,5 +11,8 @@ export class Provincia {
     id: number
    
     @Column()
-    nombre: String
+    descripcion: String
+   
+    @Column()
+    fecha: boolean
 }

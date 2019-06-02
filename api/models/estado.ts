@@ -1,15 +1,15 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Provincia {
+export class Estado {
 
-    constructor(init?: Partial<Provincia>) {
+    constructor(init?: Partial<Estado>) {
         Object.assign(this, init)
     }
-   
+
     @PrimaryGeneratedColumn()
     id: number
-   
+
     @Column()
-    nombre: String
+    descripcion: String
 }
