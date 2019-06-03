@@ -8,6 +8,13 @@ import { Usuario } from '../models/usuario';
 // 'use strict';
 module.exports = function (app: express.Application) {
 
+    app.use(function (req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*"); // allow requests from any other server
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE'); // allow these verbs
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
+        next();
+    });
+
     app.route('/registrar_usuario')
         .get(async function (req, res) {
             let conexion = await createConnection()
@@ -123,4 +130,6 @@ module.exports = function (app: express.Application) {
         .get(function (req, res) {
             res.send('Bienvenido a Tasa Home!');
         });
+
+
 };
