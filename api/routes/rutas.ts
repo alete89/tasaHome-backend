@@ -40,10 +40,17 @@ module.exports = function (app: express.Application) {
         });
 
     app.route('/login')
-        .get(async function (req, res) {
+        .post(async function (req, res) {
             let conexion = await createConnection()
+            try {
             res.send(await getCustomRepository(RepoUsuarios).login(req.body.email, req.body.contraseña))
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                });
+            } finally {
             conexion.close()
+            }
         });
 
     app.route('/usuarios/recuperar_contraseña')

@@ -20,7 +20,7 @@ export class RepoUsuarios extends Repository<Usuario> {
             }
             return usuario
         } catch (error) {
-            return "Credenciales incorrectas"
+            throw "Credenciales incorrectas"
         }
     }
 
