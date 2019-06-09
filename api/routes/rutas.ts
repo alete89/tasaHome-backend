@@ -1,9 +1,12 @@
 import express = require('express');
-import { createConnection, getCustomRepository, getManager } from 'typeorm';
+import { createConnection, getCustomRepository, getManager, getRepository } from 'typeorm';
 import { Tasacion } from '../models/tasacion';
 import { RepoTasaciones } from '../repos/repoTasaciones';
 import { RepoUsuarios } from '../repos/repoUsuarios';
 import { Usuario } from '../models/usuario';
+import { Partido } from '../models/partido';
+import { Provincia } from '../models/provincia';
+import { Localidad } from '../models/localidad';
 
 // 'use strict';
 module.exports = function (app: express.Application) {
@@ -43,13 +46,13 @@ module.exports = function (app: express.Application) {
         .post(async function (req, res) {
             let conexion = await createConnection()
             try {
-            res.send(await getCustomRepository(RepoUsuarios).login(req.body.email, req.body.contraseña))
+                res.send(await getCustomRepository(RepoUsuarios).login(req.body.email, req.body.contraseña))
             } catch (error) {
                 res.status(400).send({
                     message: error
                 });
             } finally {
-            conexion.close()
+                conexion.close()
             }
         });
 
@@ -132,6 +135,51 @@ module.exports = function (app: express.Application) {
             res.send("OK")
             conexion.close()
         });
+
+    app.route('/provincias')
+        .get(async function (req, res) {
+            let conexion = await createConnection()
+            try {
+                let provincias = await getRepository(Provincia).find()
+                res.send(provincias)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            } finally {
+                conexion.close()
+            }
+        })
+
+    app.route('/partidos')
+        .get(async function (req, res) {
+            let conexion = await createConnection()
+            try {
+                let partidos = await getRepository(Partido).find()
+                res.send(partidos)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            } finally {
+                conexion.close()
+            }
+        })
+
+    app.route('/localidades')
+        .get(async function (req, res) {
+            let conexion = await createConnection()
+            try {
+                let localidades = await getRepository(Localidad).find()
+                res.send(localidades)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            } finally {
+                conexion.close()
+            }
+        })
 
     app.route('/')
         .get(function (req, res) {
