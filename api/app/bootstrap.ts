@@ -175,11 +175,11 @@ export class Bootstrap {
 
     async crearUsuarios() {
         this.juan = new Usuario({
-            nombre: "Juan", apellido: "Perez", edad: 20, email: "juanp@mail.com", genero: "Hombre", contraseña: "123",
+            nombre: "Juan", apellido: "Perez", edad: 20, email: "juanp@mail.com", genero: "Hombre", contrasenia: "123",
             domicilio: Promise.resolve(this.domicilioJuan), fecha_nacimiento: new Date()
         })
         this.celeste = new Usuario({
-            nombre: "Celeste", apellido: "Cid", edad: 45, email: "celes@mail.com", genero: "Mujer", contraseña: "cel",
+            nombre: "Celeste", apellido: "Cid", edad: 45, email: "celes@mail.com", genero: "Mujer", contrasenia: "cel",
             domicilio: Promise.resolve(this.domicilioCeleste), fecha_nacimiento: new Date()
         })
         this.usuarios = [this.juan, this.celeste]

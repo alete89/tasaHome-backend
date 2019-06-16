@@ -27,7 +27,10 @@ export class Usuario {
     genero: String
 
     @Column()
-    contraseña: String
+    fecha_nacimiento: Date
+
+    @Column()
+    contrasenia: String
 
     @ManyToOne(type => Domicilio)
     @JoinColumn({ name: "id_domicilio" })
