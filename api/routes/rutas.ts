@@ -170,11 +170,11 @@ module.exports = function (app: express.Application) {
             }
         })
 
-    app.route('/partidos')
+    app.route('/partidos/:id')
         .get(async function (req, res) {
             let conexion = await createConnection()
             try {
-                let partidos = await getRepository(Partido).find()
+                let partidos = await getRepository(Partido).find({ where: { provincia: req.params.id } })
                 res.send(partidos)
             } catch (error) {
                 res.status(400).send({
@@ -185,11 +185,11 @@ module.exports = function (app: express.Application) {
             }
         })
 
-    app.route('/localidades')
+    app.route('/localidades/:id')
         .get(async function (req, res) {
             let conexion = await createConnection()
             try {
-                let localidades = await getRepository(Localidad).find()
+                let localidades = await getRepository(Localidad).find({ where: { partido: req.params.id } })
                 res.send(localidades)
             } catch (error) {
                 res.status(400).send({
@@ -199,6 +199,7 @@ module.exports = function (app: express.Application) {
                 conexion.close()
             }
         })
+
 
     app.route('/barrios')
         .get(async function (req, res) {
