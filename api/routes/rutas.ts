@@ -9,6 +9,7 @@ import { Provincia } from '../models/provincia';
 import { Localidad } from '../models/localidad';
 import { Barrio } from '../models/barrio';
 import { Comuna } from '../models/comuna';
+import { Domicilio } from '../models/domicilio';
 
 // 'use strict';
 module.exports = function (app: express.Application) {
@@ -143,6 +144,23 @@ module.exports = function (app: express.Application) {
             let tasacion = Tasacion.fromJson(req.body);
             // tasacion.validar()
             await getCustomRepository(RepoTasaciones).guardarTasaciones([tasacion])
+            res.send("OK")
+            conexion.close()
+        });
+
+    app.route('/registrar-usuario')
+        .post(async function (req, res) {
+            let conexion = await createConnection()
+            let usuario = Usuario.fromJson(req.body)
+            let domicilio = new Domicilio()
+            domicilio.localidad = req.body.localidad
+            domicilio.partido = req.body.partido
+            domicilio.provincia = req.body.provincia
+            domicilio.descripcion = req.body.direccion
+            await getRepository(Domicilio).save(domicilio)
+            usuario.domicilio = Promise.resolve(domicilio)
+            usuario.edad = new Date().getFullYear() - new Date(req.body.fecha_nacimiento).getFullYear()
+            await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
             res.send("OK")
             conexion.close()
         });
