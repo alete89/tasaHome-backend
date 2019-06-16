@@ -11,5 +11,5 @@ export class Provincia {
     id: number
    
     @Column()
-    nombre: String
+    descripcion: String
 }

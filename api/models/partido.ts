@@ -11,5 +11,5 @@ export class Partido {
     id: number
    
     @Column()
-    nombre: String
+    descripcion: String
 }
