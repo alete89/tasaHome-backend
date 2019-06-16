@@ -7,6 +7,8 @@ import { Usuario } from '../models/usuario';
 import { Partido } from '../models/partido';
 import { Provincia } from '../models/provincia';
 import { Localidad } from '../models/localidad';
+import { Barrio } from '../models/barrio';
+import { Comuna } from '../models/comuna';
 
 // 'use strict';
 module.exports = function (app: express.Application) {
@@ -75,6 +77,23 @@ module.exports = function (app: express.Application) {
                 "(SELECT count(*) FROM tasahome.comisaria as comisaria WHERE comisaria.id_barrio = ?) as comisarias," +
                 "(SELECT count(*) FROM tasahome.espacio_verde as espacio WHERE espacio.id_barrio = ?) as espacios_verdes;"
                 , [id_barrio, id_barrio, id_barrio, id_barrio]).catch(function (e) { console.log(e) })
+            res.send(query[0])
+            conexion.close()
+        });
+
+
+    app.route('/datos/comuna/:id')
+        .get(async function (req, res) {
+            let conexion = await createConnection()
+            const entityManager = getManager()
+            let id_comuna = req.params.id
+            let query = await entityManager.query(
+                "SELECT" +
+                "(SELECT count(*) FROM tasahome.escuela as escuela WHERE escuela.id_barrio in (select id from barrio where id_comuna = ?)) as escuelas," +
+                "(SELECT count(*) FROM tasahome.hospital as hospital WHERE hospital.id_barrio in (select id from barrio where id_comuna = ?)) as hospitales," +
+                "(SELECT count(*) FROM tasahome.comisaria as comisaria WHERE comisaria.id_barrio in (select id from barrio where id_comuna = ?)) as comisarias," +
+                "(SELECT count(*) FROM tasahome.espacio_verde as espacio WHERE espacio.id_barrio in (select id from barrio where id_comuna = ?)) as espacios_verdes;"
+                , [id_comuna, id_comuna, id_comuna, id_comuna]).catch(function (e) { console.log(e) })
             res.send(query[0])
             conexion.close()
         });
@@ -172,6 +191,36 @@ module.exports = function (app: express.Application) {
             try {
                 let localidades = await getRepository(Localidad).find()
                 res.send(localidades)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            } finally {
+                conexion.close()
+            }
+        })
+
+    app.route('/barrios')
+        .get(async function (req, res) {
+            let conexion = await createConnection()
+            try {
+                let barrios = await getRepository(Barrio).find()
+                res.send(barrios)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            } finally {
+                conexion.close()
+            }
+        })
+
+    app.route('/comunas')
+        .get(async function (req, res) {
+            let conexion = await createConnection()
+            try {
+                let comunas = await getRepository(Comuna).find()
+                res.send(comunas)
             } catch (error) {
                 res.status(400).send({
                     message: error
