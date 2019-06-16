@@ -15,7 +15,7 @@ export class RepoUsuarios extends Repository<Usuario> {
     async login(posible_email: String, posible_password: String) {
         try {
             let usuario: any = await this.findOneOrFail({ email: posible_email })
-            if (usuario.contraseña != posible_password) {
+            if (usuario.contrasenia != posible_password) {
                 throw "Credenciales incorrectas"
             }
             return usuario
