@@ -15,6 +15,7 @@ import { TipoPropiedad } from "../models/tipo_propiedad";
 import { TipoOperacion } from "../models/tipo_operacion";
 import { Estado } from "../models/estado";
 import { Servicio } from "../models/servicio";
+import { Comuna } from "../models/comuna";
 
 export class Bootstrap {
 
@@ -30,10 +31,12 @@ export class Bootstrap {
     ballester: Localidad
     buenosAires: Provincia
     villaUrquiza: Barrio
+    recoleta: Barrio
     tasacion: Tasacion
     casa: TipoPropiedad
     venta: TipoOperacion
     electricidad: Servicio
+    comuna12: Comuna
 
     async run() {
         try {
@@ -42,6 +45,7 @@ export class Bootstrap {
             let noHayUsuarios = await this.repoUsuarios.noHayUsuarios()
             if (noHayUsuarios) {
                 this.repoDomicilio = getRepository(Domicilio)
+                await this.crearComunas()
                 await this.crearBarrios()
                 await this.crearEscuelas()
                 await this.crearComisarias()
@@ -62,14 +66,27 @@ export class Bootstrap {
     }
 
     async crearBarrios() {
-        this.villaUrquiza = new Barrio({ descripcion: "Villa Urquiza" })
+        this.villaUrquiza = new Barrio({ descripcion: "Villa Urquiza", comuna: Promise.resolve(this.comuna12) })
+        this.recoleta = new Barrio({ descripcion: "Recoleta", comuna: Promise.resolve(this.comuna12) })
         await getRepository(Barrio).save(this.villaUrquiza)
+        await getRepository(Barrio).save(this.recoleta)
+
+    }
+
+    async crearComunas() {
+        this.comuna12 = new Comuna({ descripcion: "Comuna 12" })
+        await getRepository(Comuna).save(this.comuna12)
     }
 
     async crearEscuelas() {
         let escuela: Escuela = new Escuela()
+        let escuela2: Escuela = new Escuela()
         escuela.barrio = Promise.resolve(this.villaUrquiza)
+        escuela2.barrio = Promise.resolve(this.recoleta)
         await getRepository(Escuela).save(escuela).catch(function (error) {
+            console.log(error)
+        })
+        await getRepository(Escuela).save(escuela2).catch(function (error) {
             console.log(error)
         })
     }
@@ -99,9 +116,9 @@ export class Bootstrap {
     }
 
     async crearDomicilios() {
-        this.buenosAires = new Provincia({ nombre: "Buenos Aires" })
-        this.sanMartin = new Partido({ nombre: "San Martín" })
-        this.ballester = new Localidad({ nombre: "Villa Ballester" })
+        this.buenosAires = new Provincia({ descripcion: "Buenos Aires" })
+        this.sanMartin = new Partido({ descripcion: "San Martín" })
+        this.ballester = new Localidad({ descripcion: "Villa Ballester" })
         await getRepository(Provincia).save(this.buenosAires)
         await getRepository(Partido).save(this.sanMartin)
         await getRepository(Localidad).save(this.ballester)
@@ -159,11 +176,11 @@ export class Bootstrap {
     async crearUsuarios() {
         this.juan = new Usuario({
             nombre: "Juan", apellido: "Perez", edad: 20, email: "juanp@mail.com", genero: "Hombre", contraseña: "123",
-            domicilio: Promise.resolve(this.domicilioJuan)
+            domicilio: Promise.resolve(this.domicilioJuan), fecha_nacimiento: new Date()
         })
         this.celeste = new Usuario({
             nombre: "Celeste", apellido: "Cid", edad: 45, email: "celes@mail.com", genero: "Mujer", contraseña: "cel",
-            domicilio: Promise.resolve(this.domicilioCeleste)
+            domicilio: Promise.resolve(this.domicilioCeleste), fecha_nacimiento: new Date()
         })
         this.usuarios = [this.juan, this.celeste]
         await this.repoUsuarios.guardarUsuarios(this.usuarios)
