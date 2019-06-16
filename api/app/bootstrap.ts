@@ -117,8 +117,8 @@ export class Bootstrap {
 
     async crearDomicilios() {
         this.buenosAires = new Provincia({ descripcion: "Buenos Aires" })
-        this.sanMartin = new Partido({ descripcion: "San Martín" })
-        this.ballester = new Localidad({ descripcion: "Villa Ballester" })
+        this.sanMartin = new Partido({ descripcion: "San Martín", provincia: Promise.resolve(this.buenosAires) })
+        this.ballester = new Localidad({ descripcion: "Villa Ballester", partido: Promise.resolve(this.sanMartin) })
         await getRepository(Provincia).save(this.buenosAires)
         await getRepository(Partido).save(this.sanMartin)
         await getRepository(Localidad).save(this.ballester)

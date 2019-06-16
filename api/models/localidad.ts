@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm"
+import { Partido } from "./partido";
 
 @Entity()
 export class Localidad {
@@ -12,4 +13,8 @@ export class Localidad {
 
     @Column()
     descripcion: String
+
+    @ManyToOne(type => Partido)
+    @JoinColumn({ name: "id_partido" })
+    partido: Promise<Partido>;
 }
