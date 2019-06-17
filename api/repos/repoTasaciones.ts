@@ -48,15 +48,24 @@ export class RepoTasaciones extends Repository<Tasacion> {
     }
 
     async tasacionesSimilares(body: any) {
-        return await this.find({
+        let tasaciones = await this.find({
+            join: {
+                alias: "tasacion",
+                leftJoinAndSelect: {
+                    tipoDePropiedad: "tasacion.tipoDePropiedad",
+                    barrio: "tasacion.barrio"
+                },
+            },
             where: [
                 { barrio: { id: body.id_barrio } },
                 { ambientes: body.ambientes },
                 { tipoDePropiedad: { id: body.id_tipo_propiedad } },
                 { tipoDeOperacion: { id: body.id_tipo_operacion } },
-                { superficie: Between(body.superficie_minima, body.superficie_maxima) }
+                { superficie: Between(body.superficie_minima, 100000) }
             ]
         })
+        console.log("Tasaciones: ", tasaciones)
+        return tasaciones
     }
 
 }
