@@ -10,6 +10,8 @@ import { Localidad } from '../models/localidad';
 import { Barrio } from '../models/barrio';
 import { Comuna } from '../models/comuna';
 import { Domicilio } from '../models/domicilio';
+import { TipoPropiedad } from '../models/tipo_propiedad';
+import { TipoOperacion } from '../models/tipo_operacion';
 
 // 'use strict';
 module.exports = function (app: express.Application) {
@@ -106,8 +108,8 @@ module.exports = function (app: express.Application) {
             conexion.close()
         });
 
-    app.route('/tasaciones_similares/:id')
-        .get(async function (req, res) {
+    app.route('/tasaciones_similares')
+        .put(async function (req, res) {
             let conexion = await createConnection()
             res.send(await getCustomRepository(RepoTasaciones).tasacionesSimilares(req.body))
             conexion.close()
@@ -225,6 +227,37 @@ module.exports = function (app: express.Application) {
             try {
                 let barrios = await getRepository(Barrio).find()
                 res.send(barrios)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            } finally {
+                conexion.close()
+            }
+        })
+
+    app.route('/tipos-propiedad')
+        .get(async function (req, res) {
+            let conexion = await createConnection()
+            try {
+                let tipos_de_propiedad = await getRepository(TipoPropiedad).find()
+                res.send(tipos_de_propiedad)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            } finally {
+                conexion.close()
+            }
+        })
+
+
+    app.route('/tipos-operacion')
+        .get(async function (req, res) {
+            let conexion = await createConnection()
+            try {
+                let tipos_de_operacion = await getRepository(TipoOperacion).find()
+                res.send(tipos_de_operacion)
             } catch (error) {
                 res.status(400).send({
                     message: error
