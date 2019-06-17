@@ -35,7 +35,10 @@ export class Bootstrap {
     recoleta: Barrio
     tasacion: Tasacion
     casa: TipoPropiedad
+    departamento: TipoPropiedad
+    ph: TipoPropiedad
     venta: TipoOperacion
+    alquiler: TipoOperacion
     electricidad: Servicio
     comuna12: Comuna
     zonaProp: SitioPublicacion
@@ -71,9 +74,7 @@ export class Bootstrap {
     async crearBarrios() {
         this.villaUrquiza = new Barrio({ descripcion: "Villa Urquiza", comuna: Promise.resolve(this.comuna12) })
         this.recoleta = new Barrio({ descripcion: "Recoleta", comuna: Promise.resolve(this.comuna12) })
-        await getRepository(Barrio).save(this.villaUrquiza)
-        await getRepository(Barrio).save(this.recoleta)
-
+        await getRepository(Barrio).save([this.villaUrquiza, this.recoleta])
     }
 
     async crearComunas() {
@@ -142,12 +143,15 @@ export class Bootstrap {
 
     async crearTiposDePropiedad() {
         this.casa = new TipoPropiedad({ descripcion: "Casa" })
-        await getRepository(TipoPropiedad).save(this.casa)
+        this.departamento = new TipoPropiedad({ descripcion: "Departamento" })
+        this.ph = new TipoPropiedad({ descripcion: "PH" })
+        await getRepository(TipoPropiedad).save([this.casa, this.departamento, this.ph])
     }
 
     async crearTiposDeOperacion() {
         this.venta = new TipoOperacion({ descripcion: "Venta" })
-        await getRepository(TipoOperacion).save(this.venta)
+        this.alquiler = new TipoOperacion({ descripcion: "Alquiler" })
+        await getRepository(TipoOperacion).save([this.venta, this.alquiler])
     }
 
     async crearServicios() {
