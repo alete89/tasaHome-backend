@@ -6,13 +6,16 @@ export class SitioPublicacion {
     constructor(init?: Partial<SitioPublicacion>) {
         Object.assign(this, init)
     }
-   
+
     @PrimaryGeneratedColumn()
     id: number
-   
+
     @Column()
     descripcion: String
-   
-    @Column()
+
+    @Column({ nullable: true })
+    logo_url: String
+
+    @Column({ nullable: true })
     fecha: boolean
 }

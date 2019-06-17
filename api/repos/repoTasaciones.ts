@@ -33,7 +33,18 @@ export class RepoTasaciones extends Repository<Tasacion> {
     }
 
     async tasacionesAnteriores(id_usuario: number) {
-        return await this.find({ where: { usuario: { id: id_usuario } } })
+        let tasacion = await this.find({
+            join: {
+                alias: "tasacion",
+                leftJoinAndSelect: {
+                    tipoDePropiedad: "tasacion.tipoDePropiedad",
+                    barrio: "tasacion.barrio",
+                    sitios_publicados: "tasacion.sitios_publicados"
+                }
+            }, where: { usuario: { id: id_usuario } }
+        })
+        console.log(tasacion)
+        return tasacion
     }
 
     async tasacionesSimilares(body: any) {

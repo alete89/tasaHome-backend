@@ -32,6 +32,9 @@ export class Tasacion {
     @Column({ nullable: true })
     valor: number
 
+    @Column({ nullable: true })
+    privada: boolean
+
     @ManyToOne(type => Usuario)
     @JoinColumn({ name: "id_usuario" })
     usuario: Promise<Usuario>;
@@ -54,7 +57,7 @@ export class Tasacion {
 
     @ManyToMany(type => SitioPublicacion)
     @JoinTable({ name: "sitio_tasacion" })
-    sitios_publicados: SitioPublicacion[]
+    sitios_publicados: Promise<SitioPublicacion[]>;
 
     @ManyToOne(type => Barrio)
     @JoinColumn({ name: "id_barrio" })

@@ -16,6 +16,7 @@ import { TipoOperacion } from "../models/tipo_operacion";
 import { Estado } from "../models/estado";
 import { Servicio } from "../models/servicio";
 import { Comuna } from "../models/comuna";
+import { SitioPublicacion } from "../models/sitio_publicacion";
 
 export class Bootstrap {
 
@@ -37,6 +38,7 @@ export class Bootstrap {
     venta: TipoOperacion
     electricidad: Servicio
     comuna12: Comuna
+    zonaProp: SitioPublicacion
 
     async run() {
         try {
@@ -56,6 +58,7 @@ export class Bootstrap {
                 await this.crearTiposDePropiedad()
                 await this.crearTiposDeOperacion()
                 await this.crearServicios()
+                await this.crearSitiosPublicacion()
                 await this.crearTasaciones()
             }
             conexion.close()
@@ -152,6 +155,11 @@ export class Bootstrap {
         await getRepository(Servicio).save(this.electricidad)
     }
 
+    async crearSitiosPublicacion() {
+        this.zonaProp = new SitioPublicacion({ descripcion: "Zona Prop", logo_url: "http://www.mapaprop.com/blog/wp-content/uploads/2017/05/partners-zonaprop-512.png" })
+        await getRepository(SitioPublicacion).save(this.zonaProp)
+    }
+
     async crearTasaciones() {
 
         let estado_propiedad = new Estado({ descripcion: "Bueno" })
@@ -162,12 +170,14 @@ export class Bootstrap {
             ambientes: 5,
             superficie: 300,
             fecha: new Date,
+            privada: false,
             barrio: Promise.resolve(this.villaUrquiza),
             usuario: Promise.resolve(this.celeste),
             tipoDePropiedad: Promise.resolve(this.casa),
             tipoDeOperacion: Promise.resolve(this.venta),
             estado: Promise.resolve(estado_propiedad),
-            servicios: Promise.resolve([this.electricidad])
+            servicios: Promise.resolve([this.electricidad]),
+            sitios_publicados: Promise.resolve([this.zonaProp])
         })
         this.tasacion.calcularValor()
         await getRepository(Tasacion).save(this.tasacion)
