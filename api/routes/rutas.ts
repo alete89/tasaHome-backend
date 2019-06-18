@@ -1,17 +1,17 @@
 import express = require('express');
-import { createConnection, getCustomRepository, getManager, getRepository } from 'typeorm';
-import { Tasacion } from '../models/tasacion';
-import { RepoTasaciones } from '../repos/repoTasaciones';
-import { RepoUsuarios } from '../repos/repoUsuarios';
-import { Usuario } from '../models/usuario';
-import { Partido } from '../models/partido';
-import { Provincia } from '../models/provincia';
-import { Localidad } from '../models/localidad';
+import { getCustomRepository, getManager, getRepository } from 'typeorm';
 import { Barrio } from '../models/barrio';
 import { Comuna } from '../models/comuna';
 import { Domicilio } from '../models/domicilio';
-import { TipoPropiedad } from '../models/tipo_propiedad';
+import { Localidad } from '../models/localidad';
+import { Partido } from '../models/partido';
+import { Provincia } from '../models/provincia';
+import { Tasacion } from '../models/tasacion';
 import { TipoOperacion } from '../models/tipo_operacion';
+import { TipoPropiedad } from '../models/tipo_propiedad';
+import { Usuario } from '../models/usuario';
+import { RepoTasaciones } from '../repos/repoTasaciones';
+import { RepoUsuarios } from '../repos/repoUsuarios';
 
 // 'use strict';
 module.exports = function (app: express.Application) {
@@ -25,52 +25,40 @@ module.exports = function (app: express.Application) {
 
     app.route('/registrar_usuario')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             let usuario = Usuario.fromJson(req.body);
             // usuario.validar()
             await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
             res.send("OK")
-            conexion.close()
         });
 
     app.route('/usuarios')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             res.send(await getCustomRepository(RepoUsuarios).todosLosUsuarios());
-            conexion.close()
         });
 
     app.route('/usuarios/:id')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             res.send(await getCustomRepository(RepoUsuarios).searchById(req.params.id));
-            conexion.close()
         });
 
     app.route('/login')
         .post(async function (req, res) {
-            let conexion = await createConnection()
             try {
                 res.send(await getCustomRepository(RepoUsuarios).login(req.body.email, req.body.contraseña))
             } catch (error) {
                 res.status(400).send({
                     message: error
                 });
-            } finally {
-                conexion.close()
             }
         });
 
     app.route('/usuarios/recuperar_contraseña')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             res.send(await getCustomRepository(RepoUsuarios).recuperarContraseña(req.body.email));
-            conexion.close()
         });
 
     app.route('/datos/barrio/:id')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             const entityManager = getManager()
             let id_barrio = req.params.id
             let query = await entityManager.query(
@@ -81,13 +69,11 @@ module.exports = function (app: express.Application) {
                 "(SELECT count(*) FROM tasahome.espacio_verde as espacio WHERE espacio.id_barrio = ?) as espacios_verdes;"
                 , [id_barrio, id_barrio, id_barrio, id_barrio]).catch(function (e) { console.log(e) })
             res.send(query[0])
-            conexion.close()
         });
 
 
     app.route('/datos/comuna/:id')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             const entityManager = getManager()
             let id_comuna = req.params.id
             let query = await entityManager.query(
@@ -98,61 +84,47 @@ module.exports = function (app: express.Application) {
                 "(SELECT count(*) FROM tasahome.espacio_verde as espacio WHERE espacio.id_barrio in (select id from barrio where id_comuna = ?)) as espacios_verdes;"
                 , [id_comuna, id_comuna, id_comuna, id_comuna]).catch(function (e) { console.log(e) })
             res.send(query[0])
-            conexion.close()
         });
 
     app.route('/tasaciones/:id')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             res.send(await getCustomRepository(RepoTasaciones).searchById(req.params.id));
-            conexion.close()
         });
 
     app.route('/tasaciones_similares')
         .put(async function (req, res) {
-            let conexion = await createConnection()
             res.send(await getCustomRepository(RepoTasaciones).tasacionesSimilares(req.body))
-            conexion.close()
         });
 
     app.route('/tasaciones_anteriores/:id')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             let id_usuario = req.params.id
             res.send(await getCustomRepository(RepoTasaciones).tasacionesAnteriores(id_usuario))
-            conexion.close()
         });
 
     app.route('/usuarios/contactar_usuario')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             res.send(await getCustomRepository(RepoUsuarios).contactar_usuario(req.body.email, req.body.mensaje));
-            conexion.close()
         });
 
     app.route('/tasar_propiedad')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             let tasacion = Tasacion.fromJson(req.body);
             // tasacion.validar()
             let valor = tasacion.calcularValor()
             res.send(JSON.stringify(valor))
-            conexion.close()
         });
 
     app.route('/guardar_tasacion')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             let tasacion = Tasacion.fromJson(req.body);
             // tasacion.validar()
             await getCustomRepository(RepoTasaciones).guardarTasaciones([tasacion])
             res.send("OK")
-            conexion.close()
         });
 
     app.route('/registrar-usuario')
         .post(async function (req, res) {
-            let conexion = await createConnection()
             let usuario = Usuario.fromJson(req.body)
             let domicilio = new Domicilio()
             domicilio.localidad = req.body.localidad
@@ -164,20 +136,16 @@ module.exports = function (app: express.Application) {
             usuario.edad = new Date().getFullYear() - new Date(req.body.fecha_nacimiento).getFullYear()
             await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
             res.send("OK")
-            conexion.close()
         });
 
     app.route('/publicar_tasacion')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             //TODO
             res.send("OK")
-            conexion.close()
         });
 
     app.route('/provincias')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             try {
                 let provincias = await getRepository(Provincia).find()
                 res.send(provincias)
@@ -185,14 +153,11 @@ module.exports = function (app: express.Application) {
                 res.status(400).send({
                     message: error
                 })
-            } finally {
-                conexion.close()
             }
         })
 
     app.route('/partidos/:id')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             try {
                 let partidos = await getRepository(Partido).find({ where: { provincia: req.params.id } })
                 res.send(partidos)
@@ -200,14 +165,11 @@ module.exports = function (app: express.Application) {
                 res.status(400).send({
                     message: error
                 })
-            } finally {
-                conexion.close()
             }
         })
 
     app.route('/localidades/:id')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             try {
                 let localidades = await getRepository(Localidad).find({ where: { partido: req.params.id } })
                 res.send(localidades)
@@ -215,15 +177,12 @@ module.exports = function (app: express.Application) {
                 res.status(400).send({
                     message: error
                 })
-            } finally {
-                conexion.close()
             }
         })
 
 
     app.route('/barrios')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             try {
                 let barrios = await getRepository(Barrio).find()
                 res.send(barrios)
@@ -231,14 +190,11 @@ module.exports = function (app: express.Application) {
                 res.status(400).send({
                     message: error
                 })
-            } finally {
-                conexion.close()
             }
         })
 
     app.route('/tipos-propiedad')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             try {
                 let tipos_de_propiedad = await getRepository(TipoPropiedad).find()
                 res.send(tipos_de_propiedad)
@@ -246,15 +202,12 @@ module.exports = function (app: express.Application) {
                 res.status(400).send({
                     message: error
                 })
-            } finally {
-                conexion.close()
             }
         })
 
 
     app.route('/tipos-operacion')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             try {
                 let tipos_de_operacion = await getRepository(TipoOperacion).find()
                 res.send(tipos_de_operacion)
@@ -262,14 +215,11 @@ module.exports = function (app: express.Application) {
                 res.status(400).send({
                     message: error
                 })
-            } finally {
-                conexion.close()
             }
         })
 
     app.route('/comunas')
         .get(async function (req, res) {
-            let conexion = await createConnection()
             try {
                 let comunas = await getRepository(Comuna).find()
                 res.send(comunas)
@@ -277,8 +227,6 @@ module.exports = function (app: express.Application) {
                 res.status(400).send({
                     message: error
                 })
-            } finally {
-                conexion.close()
             }
         })
 

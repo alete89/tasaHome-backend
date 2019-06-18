@@ -45,7 +45,21 @@ export class Bootstrap {
 
     async run() {
         try {
-            let conexion = await createConnection()
+            let conexion = await createConnection({
+                "type": "mysql",
+                "host": "localhost",
+                "port": 3306,
+                "username": "tasaHome",
+                "password": "tasaHome",
+                "database": "tasaHome",
+                "synchronize": true,
+                "logging": ["query", "error"],
+                "entities": [
+                    "api/models/*.ts"
+                ],
+                "migrations": [],
+                "subscribers": []
+            })
             this.repoUsuarios = getCustomRepository(RepoUsuarios);
             let noHayUsuarios = await this.repoUsuarios.noHayUsuarios()
             if (noHayUsuarios) {

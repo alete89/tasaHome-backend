@@ -1,6 +1,7 @@
 import express = require('express');
 import "reflect-metadata";
 import { Bootstrap } from './bootstrap';
+import { createConnection } from "typeorm";
 
 // Create a new express application instance
 const app: express.Application = express();
@@ -20,7 +21,12 @@ app.listen(port, function () {
 });
 
 async function run() {
+    await createConnection()
+}
+
+async function runBootstrap() {
     await bootstrap.run()
 }
 
+runBootstrap()
 run()
