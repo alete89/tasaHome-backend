@@ -6,7 +6,7 @@
     "password": "tasaHome",
     "database": "tasaHome",
     "synchronize": true,
-    "logging": true,
+    "logging": ["query", "error"],
     "entities": [
         "api/models/*.ts"
     ],
