@@ -12,6 +12,8 @@ import { TipoPropiedad } from '../models/tipo_propiedad';
 import { Usuario } from '../models/usuario';
 import { RepoTasaciones } from '../repos/repoTasaciones';
 import { RepoUsuarios } from '../repos/repoUsuarios';
+import { Estado } from '../models/estado';
+import { Servicio } from '../models/servicio';
 
 // 'use strict';
 module.exports = function (app: express.Application) {
@@ -108,24 +110,36 @@ module.exports = function (app: express.Application) {
         });
 
     app.route('/tasar_propiedad')
-        .get(async function (req, res) {
+        .put(async function (req, res) {
             let tasacion = Tasacion.fromJson(req.body);
-            // tasacion.validar()
+            tasacion.tipoDeOperacion = req.body.id_tipo_operacion
+            tasacion.tipoDePropiedad = req.body.id_tipo_propiedad
+            tasacion.estado = req.body.id_estado
             let valor = tasacion.calcularValor()
+            // tasacion.validar()
             res.send(JSON.stringify(valor))
         });
 
-    app.route('/guardar_tasacion')
-        .get(async function (req, res) {
+    app.route('/guardar_tasacion/:id')
+        .post(async function (req, res) {
+            let id_usuario = req.params.id
             let tasacion = Tasacion.fromJson(req.body);
+            console.log(tasacion)
+            tasacion.tipoDeOperacion = req.body.id_tipo_operacion
+            tasacion.tipoDePropiedad = req.body.id_tipo_propiedad
+            tasacion.estado = req.body.id_estado
+            tasacion.fecha = new Date()
+            tasacion.descripcion = tasacion.direccion
+            tasacion.usuario = id_usuario
             // tasacion.validar()
             await getCustomRepository(RepoTasaciones).guardarTasaciones([tasacion])
             res.send("OK")
         });
 
-    app.route('/registrar-usuario')
+    app.route('/registrar_usuario')
         .post(async function (req, res) {
             let usuario = Usuario.fromJson(req.body)
+            console.log(req.body)
             let domicilio = new Domicilio()
             domicilio.localidad = req.body.localidad
             domicilio.partido = req.body.partido
@@ -193,7 +207,7 @@ module.exports = function (app: express.Application) {
             }
         })
 
-    app.route('/tipos-propiedad')
+    app.route('/tipos_propiedad')
         .get(async function (req, res) {
             try {
                 let tipos_de_propiedad = await getRepository(TipoPropiedad).find()
@@ -206,11 +220,35 @@ module.exports = function (app: express.Application) {
         })
 
 
-    app.route('/tipos-operacion')
+    app.route('/tipos_operacion')
         .get(async function (req, res) {
             try {
                 let tipos_de_operacion = await getRepository(TipoOperacion).find()
                 res.send(tipos_de_operacion)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            }
+        })
+
+    app.route('/estados')
+        .get(async function (req, res) {
+            try {
+                let estados = await getRepository(Estado).find()
+                res.send(estados)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            }
+        })
+
+    app.route('/servicios')
+        .get(async function (req, res) {
+            try {
+                let servicios = await getRepository(Servicio).find()
+                res.send(servicios)
             } catch (error) {
                 res.status(400).send({
                     message: error
