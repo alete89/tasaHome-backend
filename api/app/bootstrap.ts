@@ -40,6 +40,10 @@ export class Bootstrap {
     venta: TipoOperacion
     alquiler: TipoOperacion
     electricidad: Servicio
+    gas_natural: Servicio
+    telefono: Servicio
+    agua_corriente: Servicio
+    desague_cloacal: Servicio
     comuna12: Comuna
     zonaProp: SitioPublicacion
 
@@ -169,8 +173,13 @@ export class Bootstrap {
     }
 
     async crearServicios() {
+        this.gas_natural = new Servicio({ descripcion: "Gas natural" })
         this.electricidad = new Servicio({ descripcion: "Electricidad" })
-        await getRepository(Servicio).save(this.electricidad)
+        this.telefono = new Servicio({ descripcion: "Teléfono" })
+        this.agua_corriente = new Servicio({ descripcion: "Agua corriente" })
+        this.desague_cloacal = new Servicio({ descripcion: "Desagüe cloacal" })
+
+        await getRepository(Servicio).save([this.gas_natural, this.electricidad, this.telefono, this.agua_corriente, this.desague_cloacal])
     }
 
     async crearSitiosPublicacion() {
@@ -180,8 +189,12 @@ export class Bootstrap {
 
     async crearTasaciones() {
 
-        let estado_propiedad = new Estado({ descripcion: "Bueno" })
-        await getRepository(Estado).save(estado_propiedad)
+        let muy_malo = new Estado({ descripcion: "Muy malo" })
+        let malo = new Estado({ descripcion: "Malo" })
+        let regular = new Estado({ descripcion: "Regular" })
+        let bueno = new Estado({ descripcion: "Bueno" })
+        let muy_bueno = new Estado({ descripcion: "Muy bueno" })
+        await getRepository(Estado).save([muy_malo, malo, regular, bueno, muy_bueno])
 
         this.tasacion = new Tasacion({
             descripcion: "Tasación prueba",
@@ -193,7 +206,7 @@ export class Bootstrap {
             usuario: Promise.resolve(this.celeste),
             tipoDePropiedad: Promise.resolve(this.casa),
             tipoDeOperacion: Promise.resolve(this.venta),
-            estado: Promise.resolve(estado_propiedad),
+            estado: Promise.resolve(bueno),
             servicios: Promise.resolve([this.electricidad]),
             sitios_publicados: Promise.resolve([this.zonaProp])
         })
