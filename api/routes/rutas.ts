@@ -14,6 +14,7 @@ import { RepoTasaciones } from '../repos/repoTasaciones';
 import { RepoUsuarios } from '../repos/repoUsuarios';
 import { Estado } from '../models/estado';
 import { Servicio } from '../models/servicio';
+import { EmailService } from '../servicios/emailService';
 
 // 'use strict';
 module.exports = function (app: express.Application) {
@@ -93,9 +94,11 @@ module.exports = function (app: express.Application) {
             res.send(await getCustomRepository(RepoTasaciones).searchById(req.params.id));
         });
 
-    app.route('/tasaciones_similares')
+    app.route('/tasaciones_similares/:id')
         .put(async function (req, res) {
-            res.send(await getCustomRepository(RepoTasaciones).tasacionesSimilares(req.body))
+            let tasaciones_similares = await getCustomRepository(RepoTasaciones).tasacionesSimilares(req.params.id, req.body)
+            // console.log(tasaciones_similares)
+            res.send(tasaciones_similares)
         });
 
     app.route('/tasaciones_anteriores/:id')
@@ -123,7 +126,7 @@ module.exports = function (app: express.Application) {
     app.route('/guardar_tasacion/:id')
         .post(async function (req, res) {
             let id_usuario = req.params.id
-            let tasacion = Tasacion.fromJson(req.body);
+            let tasacion: Tasacion = Tasacion.fromJson(req.body);
             console.log(tasacion)
             tasacion.tipoDeOperacion = req.body.id_tipo_operacion
             tasacion.tipoDePropiedad = req.body.id_tipo_propiedad
@@ -267,6 +270,23 @@ module.exports = function (app: express.Application) {
                 })
             }
         })
+
+    app.route('/enviar_mensaje/:id')
+        .post(async function (req, res) {
+            try {
+                let usuario_emisor: Usuario = await getCustomRepository(RepoUsuarios).searchById(req.params.id)
+                let email_receptor = req.body.email_receptor
+                let mensaje = req.body.mensaje
+                let email_service = new EmailService()
+                email_service.enviarEmail(usuario_emisor, email_receptor, mensaje)
+                res.send("OK")
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            }
+
+        });
 
     app.route('/')
         .get(function (req, res) {
