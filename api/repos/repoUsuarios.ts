@@ -29,7 +29,7 @@ export class RepoUsuarios extends Repository<Usuario> {
     }
 
     async searchById(id: number) {
-        return await this.findOne(id)
+        return await this.findOneOrFail(id)
     }
 
     async noHayUsuarios() {

@@ -198,6 +198,7 @@ export class Bootstrap {
 
         this.tasacion = new Tasacion({
             descripcion: "Tasación prueba",
+            direccion: "Corrientes 3000",
             ambientes: 5,
             superficie: 300,
             fecha: new Date,
@@ -208,7 +209,7 @@ export class Bootstrap {
             tipoDeOperacion: Promise.resolve(this.venta),
             estado: Promise.resolve(bueno),
             servicios: Promise.resolve([this.electricidad]),
-            sitios_publicados: Promise.resolve([this.zonaProp])
+            sitios_publicados: Promise.resolve([this.zonaProp]),
         })
         this.tasacion.calcularValor()
         await getRepository(Tasacion).save(this.tasacion)
