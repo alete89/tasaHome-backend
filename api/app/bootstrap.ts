@@ -46,6 +46,9 @@ export class Bootstrap {
     desague_cloacal: Servicio
     comuna12: Comuna
     zonaProp: SitioPublicacion
+    argenProp: SitioPublicacion
+    icasas: SitioPublicacion
+    olx: SitioPublicacion
 
     async run() {
         try {
@@ -183,8 +186,27 @@ export class Bootstrap {
     }
 
     async crearSitiosPublicacion() {
-        this.zonaProp = new SitioPublicacion({ descripcion: "Zona Prop", logo_url: "http://www.mapaprop.com/blog/wp-content/uploads/2017/05/partners-zonaprop-512.png" })
-        await getRepository(SitioPublicacion).save(this.zonaProp)
+        this.zonaProp = new SitioPublicacion({
+            descripcion: "ZonaProp",
+            logo_url: "http://www.mapaprop.com/blog/wp-content/uploads/2017/05/partners-zonaprop-512.png",
+            url_publicar: "https://www.zonaprop.com.ar/landingFreemium.bum"
+        })
+        this.argenProp = new SitioPublicacion({
+            descripcion: "ArgenProp",
+            logo_url: "https://pbs.twimg.com/media/DBbh5CwUIAAXRjT.jpg",
+            url_publicar: "https://www.argenprop.com/Publicar"
+        })
+        this.olx = new SitioPublicacion({
+            descripcion: "OLX",
+            logo_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/OLX_Logo.jpg/245px-OLX_Logo.jpg",
+            url_publicar: "https://www.olx.com.ar/posting#"
+        }),
+            this.icasas = new SitioPublicacion({
+                descripcion: "Icasas",
+                logo_url: "http://www.mapaprop.com/blog/wp-content/uploads/2015/07/logo-icasas.png",
+                url_publicar: "https://www.icasas.com.ar/publicar/particular"
+            })
+        await getRepository(SitioPublicacion).save([this.zonaProp, this.argenProp, this.olx, this.icasas])
     }
 
     async crearTasaciones() {

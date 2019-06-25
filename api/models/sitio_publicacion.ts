@@ -16,6 +16,9 @@ export class SitioPublicacion {
     @Column({ nullable: true })
     logo_url: String
 
+    @Column()
+    url_publicar: String
+
     @Column({ nullable: true })
     fecha: boolean
 }
