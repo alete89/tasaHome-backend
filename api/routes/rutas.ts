@@ -15,6 +15,7 @@ import { RepoUsuarios } from '../repos/repoUsuarios';
 import { Estado } from '../models/estado';
 import { Servicio } from '../models/servicio';
 import { EmailService } from '../servicios/emailService';
+import { SitioPublicacion } from '../models/sitio_publicacion';
 
 // 'use strict';
 module.exports = function (app: express.Application) {
@@ -154,6 +155,18 @@ module.exports = function (app: express.Application) {
             await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
             res.send("OK")
         });
+
+    app.route('/sitios_publicacion')
+        .get(async function (req, res) {
+            try {
+                let sitios_publicacion = await getRepository(SitioPublicacion).find()
+                res.send(sitios_publicacion)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            }
+        })
 
     app.route('/publicar_tasacion')
         .get(async function (req, res) {
