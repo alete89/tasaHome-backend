@@ -92,11 +92,7 @@ module.exports = function (app: express.Application) {
 
     app.route('/tasacion/:id')
         .get(async function (req, res) {
-            res.send(await getCustomRepository(RepoTasaciones).searchById(req.params.id));
-        });
-
-    app.route('/tasaciones/:id')
-        .get(async function (req, res) {
+            console.log(await getCustomRepository(RepoTasaciones).searchById(req.params.id))
             res.send(await getCustomRepository(RepoTasaciones).searchById(req.params.id));
         });
 
@@ -111,6 +107,12 @@ module.exports = function (app: express.Application) {
         .get(async function (req, res) {
             let id_usuario = req.params.id
             res.send(await getCustomRepository(RepoTasaciones).tasacionesAnteriores(id_usuario))
+        });
+
+    app.route('/historial_tasacion/:id')
+        .get(async function (req, res) {
+            let id_tasacion = req.params.id
+            res.send(await getCustomRepository(RepoTasaciones).historial_tasacion(id_tasacion))
         });
 
     app.route('/usuarios/contactar_usuario')
@@ -131,17 +133,31 @@ module.exports = function (app: express.Application) {
 
     app.route('/guardar_tasacion/:id')
         .post(async function (req, res) {
-            let id_usuario = req.params.id
-            let tasacion: Tasacion = Tasacion.fromJson(req.body);
-            console.log(tasacion)
-            tasacion.tipoDeOperacion = req.body.id_tipo_operacion
-            tasacion.tipoDePropiedad = req.body.id_tipo_propiedad
-            tasacion.estado = req.body.id_estado
-            tasacion.fecha = new Date()
-            tasacion.descripcion = tasacion.direccion
-            tasacion.usuario = id_usuario
-            // tasacion.validar()
-            await getCustomRepository(RepoTasaciones).guardarTasaciones([tasacion])
+            try {
+                let id_usuario = req.params.id
+                let tasacion: Tasacion = Tasacion.fromJson(req.body);
+                tasacion.tipoDeOperacion = req.body.tipoDeOperacion
+                tasacion.tipoDePropiedad = req.body.tipoDePropiedad
+                tasacion.estado = req.body.estado
+                tasacion.fecha = new Date()
+                tasacion.descripcion = tasacion.direccion
+                tasacion.usuario = id_usuario
+                // tasacion.validar()
+                if (req.body.id) {
+                    if (req.body.id_anterior) {
+                        tasacion.id_anterior = req.body.id_anterior
+                        tasacion.id = undefined
+                    } else {
+                        tasacion.id_anterior = req.body.id
+                        tasacion.id = undefined
+                    }
+                }
+                await getCustomRepository(RepoTasaciones).guardarTasaciones([tasacion])
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                });
+            }
             res.send("OK")
         });
 
