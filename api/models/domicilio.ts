@@ -19,13 +19,13 @@ export class Domicilio {
 
     @ManyToOne(type => Partido)
     @JoinColumn({ name: "id_partido" })
-    partido: Promise<Partido>;
+    partido: Partido
 
     @ManyToOne(type => Localidad)
     @JoinColumn({ name: "id_localidad" })
-    localidad: Promise<Localidad>;
+    localidad: Localidad
 
     @ManyToOne(type => Provincia)
     @JoinColumn({ name: "id_provincia" })
-    provincia: Promise<Provincia>;
+    provincia: Provincia
 }

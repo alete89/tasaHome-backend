@@ -16,5 +16,5 @@ export class Partido {
 
     @ManyToOne(type => Provincia)
     @JoinColumn({ name: "id_provincia" })
-    provincia: Promise<Provincia>;
+    provincia: Provincia
 }

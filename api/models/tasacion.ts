@@ -39,33 +39,36 @@ export class Tasacion {
     @Column({ nullable: true })
     direccion: String
 
+    @Column({ nullable: true })
+    id_anterior: number
+
     @ManyToOne(type => Usuario)
     @JoinColumn({ name: "id_usuario" })
-    usuario: Promise<Usuario>;
+    usuario: Usuario;
 
     @ManyToOne(type => TipoPropiedad)
     @JoinColumn({ name: "id_tipo_propiedad" })
-    tipoDePropiedad: Promise<TipoPropiedad>
+    tipoDePropiedad: TipoPropiedad
 
     @ManyToOne(type => TipoOperacion)
     @JoinColumn({ name: "id_tipo_operacion" })
-    tipoDeOperacion: Promise<TipoOperacion>
+    tipoDeOperacion: TipoOperacion
 
     @ManyToOne(type => Estado)
     @JoinColumn({ name: "id_estado" })
-    estado: Promise<Estado>
+    estado: Estado
 
     @ManyToMany(type => Servicio)
     @JoinTable({ name: "servicio_tasacion" })
-    servicios: Promise<Servicio[]>;
+    servicios: Servicio[]
 
     @ManyToMany(type => SitioPublicacion)
     @JoinTable({ name: "sitio_tasacion" })
-    sitios_publicados: Promise<SitioPublicacion[]>;
+    sitios_publicados: SitioPublicacion[]
 
     @ManyToOne(type => Barrio)
     @JoinColumn({ name: "id_barrio" })
-    barrio: Promise<Barrio>;
+    barrio: Barrio
 
     validar() {
         if (!this.descripcion || !this.ambientes || !this.superficie || !this.fecha || !this.valor) {

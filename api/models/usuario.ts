@@ -34,7 +34,7 @@ export class Usuario {
 
     @ManyToOne(type => Domicilio)
     @JoinColumn({ name: "id_domicilio" })
-    domicilio: Promise<Domicilio>;
+    domicilio: Domicilio
 
     validar() {
         // if (!this.nombre || !this.apellido || !this.email || !this.contraseña) {

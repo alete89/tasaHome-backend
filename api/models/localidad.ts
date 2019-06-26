@@ -16,5 +16,5 @@ export class Localidad {
 
     @ManyToOne(type => Partido)
     @JoinColumn({ name: "id_partido" })
-    partido: Promise<Partido>;
+    partido: Partido
 }

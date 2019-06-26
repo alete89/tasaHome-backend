@@ -16,5 +16,5 @@ export class Barrio {
     
     @ManyToOne(type => Comuna)
     @JoinColumn({ name: "id_comuna" })
-    comuna: Promise<Comuna>;
+    comuna: Comuna;
 }

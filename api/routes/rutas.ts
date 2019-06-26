@@ -90,6 +90,11 @@ module.exports = function (app: express.Application) {
             res.send(query[0])
         });
 
+    app.route('/tasacion/:id')
+        .get(async function (req, res) {
+            res.send(await getCustomRepository(RepoTasaciones).searchById(req.params.id));
+        });
+
     app.route('/tasaciones/:id')
         .get(async function (req, res) {
             res.send(await getCustomRepository(RepoTasaciones).searchById(req.params.id));
@@ -116,9 +121,9 @@ module.exports = function (app: express.Application) {
     app.route('/tasar_propiedad')
         .put(async function (req, res) {
             let tasacion = Tasacion.fromJson(req.body);
-            tasacion.tipoDeOperacion = req.body.id_tipo_operacion
-            tasacion.tipoDePropiedad = req.body.id_tipo_propiedad
-            tasacion.estado = req.body.id_estado
+            let prueba = await getRepository(TipoPropiedad).findOneOrFail(req.body.id_tipo_propiedad)
+            tasacion.tipoDePropiedad = prueba
+            tasacion.estado = req.body.estado.id
             let valor = tasacion.calcularValor()
             // tasacion.validar()
             res.send(JSON.stringify(valor))
@@ -150,7 +155,7 @@ module.exports = function (app: express.Application) {
             domicilio.provincia = req.body.provincia
             domicilio.descripcion = req.body.direccion
             await getRepository(Domicilio).save(domicilio)
-            usuario.domicilio = Promise.resolve(domicilio)
+            usuario.domicilio = domicilio
             usuario.edad = new Date().getFullYear() - new Date(req.body.fecha_nacimiento).getFullYear()
             await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
             res.send("OK")

@@ -19,5 +19,5 @@ export class Publicacion {
 
     @ManyToOne(type => Tasacion)
     @JoinColumn({ name: "id_tasacion" })
-    tasacion: Promise<Tasacion>
+    tasacion: Tasacion
 }

@@ -93,8 +93,8 @@ export class Bootstrap {
     }
 
     async crearBarrios() {
-        this.villaUrquiza = new Barrio({ descripcion: "Villa Urquiza", comuna: Promise.resolve(this.comuna12) })
-        this.recoleta = new Barrio({ descripcion: "Recoleta", comuna: Promise.resolve(this.comuna12) })
+        this.villaUrquiza = new Barrio({ descripcion: "Villa Urquiza", comuna: this.comuna12 })
+        this.recoleta = new Barrio({ descripcion: "Recoleta", comuna: this.comuna12 })
         await getRepository(Barrio).save([this.villaUrquiza, this.recoleta])
     }
 
@@ -106,8 +106,8 @@ export class Bootstrap {
     async crearEscuelas() {
         let escuela: Escuela = new Escuela()
         let escuela2: Escuela = new Escuela()
-        escuela.barrio = Promise.resolve(this.villaUrquiza)
-        escuela2.barrio = Promise.resolve(this.recoleta)
+        escuela.barrio = this.villaUrquiza
+        escuela2.barrio = this.recoleta
         await getRepository(Escuela).save(escuela).catch(function (error) {
             console.log(error)
         })
@@ -118,7 +118,7 @@ export class Bootstrap {
 
     async crearComisarias() {
         let comisaria: Comisaria = new Comisaria()
-        comisaria.barrio = Promise.resolve(this.villaUrquiza)
+        comisaria.barrio = this.villaUrquiza
         await getRepository(Comisaria).save(comisaria).catch(function (error) {
             console.log(error)
         })
@@ -126,7 +126,7 @@ export class Bootstrap {
 
     async crearEspacios() {
         let espacio_verde: EspacioVerde = new EspacioVerde()
-        espacio_verde.barrio = Promise.resolve(this.villaUrquiza)
+        espacio_verde.barrio = this.villaUrquiza
         await getRepository(EspacioVerde).save(espacio_verde).catch(function (error) {
             console.log(error)
         })
@@ -134,7 +134,7 @@ export class Bootstrap {
 
     async crearHospitales() {
         let hospital: Hospital = new Hospital()
-        hospital.barrio = Promise.resolve(this.villaUrquiza)
+        hospital.barrio = this.villaUrquiza
         await getRepository(Hospital).save(hospital).catch(function (error) {
             console.log(error)
         })
@@ -142,21 +142,21 @@ export class Bootstrap {
 
     async crearDomicilios() {
         this.buenosAires = new Provincia({ descripcion: "Buenos Aires" })
-        this.sanMartin = new Partido({ descripcion: "San Martín", provincia: Promise.resolve(this.buenosAires) })
-        this.ballester = new Localidad({ descripcion: "Villa Ballester", partido: Promise.resolve(this.sanMartin) })
+        this.sanMartin = new Partido({ descripcion: "San Martín", provincia: this.buenosAires })
+        this.ballester = new Localidad({ descripcion: "Villa Ballester", partido: this.sanMartin })
         await getRepository(Provincia).save(this.buenosAires)
         await getRepository(Partido).save(this.sanMartin)
         await getRepository(Localidad).save(this.ballester)
         this.domicilioJuan = new Domicilio({
             descripcion: "Posadas 1515",
-            provincia: Promise.resolve(this.buenosAires), partido: Promise.resolve(this.sanMartin),
-            localidad: Promise.resolve(this.ballester)
+            provincia: this.buenosAires, partido: this.sanMartin,
+            localidad: this.ballester
         })
         this.domicilioCeleste = new Domicilio({
             descripcion: "Ayacucho 3520",
-            provincia: Promise.resolve(this.buenosAires),
-            partido: Promise.resolve(this.sanMartin),
-            localidad: Promise.resolve(this.ballester)
+            provincia: this.buenosAires,
+            partido: this.sanMartin,
+            localidad: this.ballester
         })
         this.domicilios = [this.domicilioJuan, this.domicilioCeleste]
         await this.repoDomicilio.save(this.domicilios)
@@ -225,13 +225,13 @@ export class Bootstrap {
             superficie: 300,
             fecha: new Date,
             privada: false,
-            barrio: Promise.resolve(this.villaUrquiza),
-            usuario: Promise.resolve(this.celeste),
-            tipoDePropiedad: Promise.resolve(this.casa),
-            tipoDeOperacion: Promise.resolve(this.venta),
-            estado: Promise.resolve(bueno),
-            servicios: Promise.resolve([this.electricidad]),
-            sitios_publicados: Promise.resolve([this.zonaProp]),
+            barrio: this.villaUrquiza,
+            usuario: this.celeste,
+            tipoDePropiedad: this.casa,
+            tipoDeOperacion: this.venta,
+            estado: bueno,
+            servicios: [this.electricidad],
+            sitios_publicados: [this.zonaProp],
         })
         this.tasacion.calcularValor()
         await getRepository(Tasacion).save(this.tasacion)
@@ -240,11 +240,11 @@ export class Bootstrap {
     async crearUsuarios() {
         this.juan = new Usuario({
             nombre: "Juan", apellido: "Perez", edad: 20, email: "juanp@mail.com", genero: "Hombre", contrasenia: "123",
-            domicilio: Promise.resolve(this.domicilioJuan), fecha_nacimiento: new Date()
+            domicilio: this.domicilioJuan, fecha_nacimiento: new Date()
         })
         this.celeste = new Usuario({
             nombre: "Celeste", apellido: "Cid", edad: 45, email: "celes@mail.com", genero: "Mujer", contrasenia: "cel",
-            domicilio: Promise.resolve(this.domicilioCeleste), fecha_nacimiento: new Date()
+            domicilio: this.domicilioCeleste, fecha_nacimiento: new Date()
         })
         this.usuarios = [this.juan, this.celeste]
         await this.repoUsuarios.guardarUsuarios(this.usuarios)
