@@ -11,10 +11,10 @@ export class Escuela {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ nullable: true })
+    @Column("decimal", { nullable: true, precision: 20, scale: 10 })
     longitud: number
 
-    @Column({ nullable: true })
+    @Column("decimal", { nullable: true, precision: 20, scale: 10 })
     latitud: number
 
     @Column({ nullable: true })

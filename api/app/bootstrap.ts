@@ -106,6 +106,10 @@ export class Bootstrap {
     async crearEscuelas() {
         let escuela: Escuela = new Escuela()
         let escuela2: Escuela = new Escuela()
+        escuela.latitud = -34.5780993
+        escuela.longitud = -58.5426421
+        escuela2.latitud = -34.5791019
+        escuela2.longitud = -58.5304757
         escuela.barrio = this.villaUrquiza
         escuela2.barrio = this.recoleta
         await getRepository(Escuela).save(escuela).catch(function (error) {

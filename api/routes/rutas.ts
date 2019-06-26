@@ -16,6 +16,7 @@ import { Estado } from '../models/estado';
 import { Servicio } from '../models/servicio';
 import { EmailService } from '../servicios/emailService';
 import { SitioPublicacion } from '../models/sitio_publicacion';
+import { Escuela } from '../models/escuela';
 
 // 'use strict';
 module.exports = function (app: express.Application) {
@@ -274,6 +275,18 @@ module.exports = function (app: express.Application) {
             try {
                 let estados = await getRepository(Estado).find()
                 res.send(estados)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            }
+        })
+
+    app.route('/escuelas')
+        .get(async function (req, res) {
+            try {
+                let escuelas = await getRepository(Escuela).find()
+                res.send(escuelas)
             } catch (error) {
                 res.status(400).send({
                     message: error
