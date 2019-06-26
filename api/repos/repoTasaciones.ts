@@ -61,7 +61,7 @@ export class RepoTasaciones extends Repository<Tasacion> {
             where:
                 [
                     { usuario: { id: Not(id_logueado) }, barrio: { id: body.id_barrio } },
-                    { usuario: { id: Not(id_logueado) }, ambientes: MoreThanOrEqual(body.ambientes) },
+                    { usuario: { id: Not(id_logueado) }, ambientes: MoreThanOrEqual(body.ambientes_minimos) },
                     { usuario: { id: Not(id_logueado) }, tipoDePropiedad: { id: body.id_tipo_propiedad } },
                     { usuario: { id: Not(id_logueado) }, tipoDeOperacion: { id: body.id_tipo_operacion } },
                     { usuario: { id: Not(id_logueado) }, superficie: Between(body.superficie_minima, 100000) }
