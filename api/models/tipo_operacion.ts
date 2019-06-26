@@ -12,4 +12,7 @@ export class TipoOperacion {
    
     @Column()
     descripcion: String
+
+    @Column()
+    precioBase: number
 }

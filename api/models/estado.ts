@@ -12,4 +12,7 @@ export class Estado {
 
     @Column()
     descripcion: String
+
+    @Column()
+    coeficiente: number
 }

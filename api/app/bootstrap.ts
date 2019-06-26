@@ -163,24 +163,24 @@ export class Bootstrap {
     }
 
     async crearTiposDePropiedad() {
-        this.casa = new TipoPropiedad({ descripcion: "Casa" })
-        this.departamento = new TipoPropiedad({ descripcion: "Departamento" })
-        this.ph = new TipoPropiedad({ descripcion: "PH" })
+        this.casa = new TipoPropiedad({ descripcion: "Casa", coeficiente: 1.1 })
+        this.departamento = new TipoPropiedad({ descripcion: "Departamento", coeficiente: 1 })
+        this.ph = new TipoPropiedad({ descripcion: "PH", coeficiente: 1.05 })
         await getRepository(TipoPropiedad).save([this.casa, this.departamento, this.ph])
     }
 
     async crearTiposDeOperacion() {
-        this.venta = new TipoOperacion({ descripcion: "Venta" })
-        this.alquiler = new TipoOperacion({ descripcion: "Alquiler" })
+        this.venta = new TipoOperacion({ descripcion: "Venta", precioBase: 2000 })
+        this.alquiler = new TipoOperacion({ descripcion: "Alquiler", precioBase: 200 })
         await getRepository(TipoOperacion).save([this.venta, this.alquiler])
     }
 
     async crearServicios() {
-        this.gas_natural = new Servicio({ descripcion: "Gas natural" })
-        this.electricidad = new Servicio({ descripcion: "Electricidad" })
-        this.telefono = new Servicio({ descripcion: "Teléfono" })
-        this.agua_corriente = new Servicio({ descripcion: "Agua corriente" })
-        this.desague_cloacal = new Servicio({ descripcion: "Desagüe cloacal" })
+        this.gas_natural = new Servicio({ descripcion: "Gas natural", coeficiente: 1.05 })
+        this.electricidad = new Servicio({ descripcion: "Electricidad", coeficiente: 1.10 })
+        this.telefono = new Servicio({ descripcion: "Teléfono", coeficiente: 1.01 })
+        this.agua_corriente = new Servicio({ descripcion: "Agua corriente", coeficiente: 1.3 })
+        this.desague_cloacal = new Servicio({ descripcion: "Desagüe cloacal", coeficiente: 1.15 })
 
         await getRepository(Servicio).save([this.gas_natural, this.electricidad, this.telefono, this.agua_corriente, this.desague_cloacal])
     }
@@ -211,18 +211,18 @@ export class Bootstrap {
 
     async crearTasaciones() {
 
-        let muy_malo = new Estado({ descripcion: "Muy malo" })
-        let malo = new Estado({ descripcion: "Malo" })
-        let regular = new Estado({ descripcion: "Regular" })
-        let bueno = new Estado({ descripcion: "Bueno" })
-        let muy_bueno = new Estado({ descripcion: "Muy bueno" })
+        let muy_malo = new Estado({ descripcion: "Muy malo", coeficiente: 0.8 })
+        let malo = new Estado({ descripcion: "Malo", coeficiente: 0.86 })
+        let regular = new Estado({ descripcion: "Regular", coeficiente: 0.92 })
+        let bueno = new Estado({ descripcion: "Bueno", coeficiente: 1 })
+        let muy_bueno = new Estado({ descripcion: "Muy bueno", coeficiente: 1.15 })
         await getRepository(Estado).save([muy_malo, malo, regular, bueno, muy_bueno])
 
         this.tasacion = new Tasacion({
             descripcion: "Tasación prueba",
             direccion: "Corrientes 3000",
             ambientes: 5,
-            superficie: 300,
+            superficie: 250,
             fecha: new Date,
             privada: false,
             barrio: this.villaUrquiza,
@@ -233,7 +233,7 @@ export class Bootstrap {
             servicios: [this.electricidad],
             sitios_publicados: [this.zonaProp],
         })
-        this.tasacion.calcularValor()
+        await this.tasacion.calcularValor()
         await getRepository(Tasacion).save(this.tasacion)
     }
 

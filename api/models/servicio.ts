@@ -13,6 +13,9 @@ export class Servicio {
     @Column()
     descripcion: String
 
+    @Column()
+    coeficiente: number
+
     static fromJson(servicioJSON: any) {
         let servicio = Object.assign(new Servicio(), servicioJSON)
         return servicio

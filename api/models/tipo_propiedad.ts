@@ -12,4 +12,8 @@ export class TipoPropiedad {
    
     @Column()
     descripcion: String
+
+    @Column()
+    coeficiente: number
+
 }
