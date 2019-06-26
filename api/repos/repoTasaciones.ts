@@ -1,4 +1,4 @@
-import { Between, EntityRepository, Repository, Not, MoreThanOrEqual } from "typeorm";
+import { Between, EntityRepository, Repository, Not, MoreThanOrEqual, IsNull } from "typeorm";
 import { Tasacion } from "../models/tasacion";
 
 @EntityRepository(Tasacion)
@@ -12,8 +12,22 @@ export class RepoTasaciones extends Repository<Tasacion> {
         }
     }
 
-    async searchById(id: number) {
-        return await this.findOne(id)
+    async searchById(id_tasacion: number) {
+        // return await this.createQueryBuilder("tasacion").leftJoinAndSelect("tasacion.servicios", "servicio")
+        //     .where("tasacion.id = :unId", { unId: id_tasacion }).getOne()
+        return await this.findOneOrFail({
+            join: {
+                alias: "tasacion",
+                leftJoinAndSelect: {
+                    tipoDePropiedad: "tasacion.tipoDePropiedad",
+                    tipoDeOperacion: "tasacion.tipoDeOperacion",
+                    estado: "tasacion.estado",
+                    servicios: "tasacion.servicios"
+                },
+            },
+            where: { id: id_tasacion }
+        })
+
     }
 
     async noHayTasaciones() {
@@ -41,9 +55,26 @@ export class RepoTasaciones extends Repository<Tasacion> {
                     barrio: "tasacion.barrio",
                     sitios_publicados: "tasacion.sitios_publicados"
                 }
-            }, where: { usuario: { id: id_usuario } }
+            }, where: { usuario: { id: id_usuario, } },
+            order: {
+                fecha: "DESC",
+                id_anterior: "ASC"
+            }
         })
         console.log(tasacion)
+        return tasacion
+    }
+
+    async historial_tasacion(id_tasacion: string) {
+        let tasacion = await this.find({
+            where: [
+                { id: id_tasacion },
+                { id_anterior: id_tasacion }
+            ], order: {
+                fecha: "ASC",
+            }
+        })
+
         return tasacion
     }
 

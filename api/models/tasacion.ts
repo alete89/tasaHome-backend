@@ -16,7 +16,7 @@ export class Tasacion {
     }
 
     @PrimaryGeneratedColumn()
-    id: number
+    id: number | undefined
 
     @Column({ nullable: true })
     descripcion: String
