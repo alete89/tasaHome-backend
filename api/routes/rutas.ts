@@ -123,9 +123,9 @@ module.exports = function (app: express.Application) {
     app.route('/tasar_propiedad')
         .put(async function (req, res) {
             let tasacion = Tasacion.fromJson(req.body);
-            let prueba = await getRepository(TipoPropiedad).findOneOrFail(req.body.id_tipo_propiedad)
-            tasacion.tipoDePropiedad = prueba
-            tasacion.estado = req.body.estado.id
+            tasacion.tipoDePropiedad = await getRepository(TipoPropiedad).findOneOrFail(req.body.id_tipo_propiedad)
+            tasacion.tipoDeOperacion = await getRepository(TipoOperacion).findOneOrFail(req.body.id_tipo_operacion)
+            tasacion.estado = await getRepository(Estado).findOneOrFail(req.body.id_estado)
             let valor = tasacion.calcularValor()
             // tasacion.validar()
             res.send(JSON.stringify(valor))
