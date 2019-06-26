@@ -44,7 +44,7 @@ export class Tasacion {
 
     @ManyToOne(type => Usuario)
     @JoinColumn({ name: "id_usuario" })
-    usuario: Usuario;
+    usuario: Usuario
 
     @ManyToOne(type => TipoPropiedad)
     @JoinColumn({ name: "id_tipo_propiedad" })
@@ -77,8 +77,12 @@ export class Tasacion {
     }
 
     calcularValor() {
-        this.valor = 200
-        return this.valor
+        return this.superficie *
+            this.tipoDeOperacion.precioBase *
+            this.tipoDePropiedad.coeficiente *
+            ((this.ambientes * 3) / 100 + 1) *
+            this.estado.coeficiente
+        // (await this.servicios).coeficiente //iterar por los servicios
     }
 
     static fromJson(tasacionJson: String) {
