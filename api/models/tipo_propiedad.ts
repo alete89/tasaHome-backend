@@ -13,7 +13,7 @@ export class TipoPropiedad {
     @Column()
     descripcion: String
 
-    @Column()
+    @Column("decimal", { nullable: true, precision: 20, scale: 10 })
     coeficiente: number
 
 }
