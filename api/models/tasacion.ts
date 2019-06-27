@@ -77,11 +77,17 @@ export class Tasacion {
     }
 
     calcularValor() {
-        return this.superficie *
+        this.valor = this.superficie *
             this.tipoDeOperacion.precioBase *
             this.tipoDePropiedad.coeficiente *
             ((this.ambientes * 3) / 100 + 1) *
-            this.estado.coeficiente
+            this.estado.coeficiente *
+            this.servicios.map(servicio => servicio.coeficiente).reduce(function(total, actual){
+                total = total * actual
+                return total
+            }, 1)
+
+        return this.valor
         // (await this.servicios).coeficiente //iterar por los servicios
     }
 
