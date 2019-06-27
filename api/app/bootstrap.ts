@@ -34,6 +34,7 @@ export class Bootstrap {
     villaUrquiza: Barrio
     recoleta: Barrio
     tasacion: Tasacion
+    tasacion2: Tasacion
     casa: TipoPropiedad
     departamento: TipoPropiedad
     ph: TipoPropiedad
@@ -106,16 +107,46 @@ export class Bootstrap {
     async crearEscuelas() {
         let escuela: Escuela = new Escuela()
         let escuela2: Escuela = new Escuela()
-        escuela.latitud = -34.5780993
-        escuela.longitud = -58.5426421
-        escuela2.latitud = -34.5791019
-        escuela2.longitud = -58.5304757
+        let escuela3: Escuela = new Escuela()
+        let escuela4: Escuela = new Escuela()
+        let escuela5: Escuela = new Escuela()
+        let escuela6: Escuela = new Escuela()
+        let escuela7: Escuela = new Escuela()
+        let escuela8: Escuela = new Escuela()
+        let escuela9: Escuela = new Escuela()
+        let escuela10: Escuela = new Escuela()
+        let escuela11: Escuela = new Escuela()
+        let escuela12: Escuela = new Escuela()
+
+        escuela.latitud = -34.5710993
+        escuela2.latitud = -34.5701019
+        escuela3.latitud = -34.5690956
+        escuela4.latitud = -34.5741099
+        escuela5.latitud = -34.5771304
+        escuela6.latitud = -34.5722500
+        escuela7.latitud = -34.5654362
+        escuela8.latitud = -34.5509013
+        escuela9.latitud = -34.5703327
+        escuela10.latitud = -34.5295827
+        escuela11.latitud = -34.5891050
+        escuela12.latitud = -34.5889876
+
+        escuela.longitud = -58.5427890
+        escuela2.longitud = -58.5311562
+        escuela3.longitud = -58.5426247
+        escuela4.longitud = -58.5341368
+        escuela5.longitud = -58.5452759
+        escuela6.longitud = -58.5392694
+        escuela7.longitud = -58.5389632
+        escuela8.longitud = -58.5341579
+        escuela9.longitud = -58.5479638
+        escuela10.longitud = -58.5409328
+        escuela11.longitud = -58.5807372
+        escuela12.longitud = -58.5107853
+
         escuela.barrio = this.villaUrquiza
         escuela2.barrio = this.recoleta
-        await getRepository(Escuela).save(escuela).catch(function (error) {
-            console.log(error)
-        })
-        await getRepository(Escuela).save(escuela2).catch(function (error) {
+        await getRepository(Escuela).save([escuela, escuela2, escuela3, escuela4, escuela5, escuela6, escuela7, escuela8, escuela9, escuela10, escuela11, escuela12]).catch(function (error) {
             console.log(error)
         })
     }
@@ -167,24 +198,24 @@ export class Bootstrap {
     }
 
     async crearTiposDePropiedad() {
-        this.casa = new TipoPropiedad({ descripcion: "Casa", coeficiente: 1.1 })
+        this.casa = new TipoPropiedad({ descripcion: "Casa", coeficiente: 1.15 })
         this.departamento = new TipoPropiedad({ descripcion: "Departamento", coeficiente: 1 })
-        this.ph = new TipoPropiedad({ descripcion: "PH", coeficiente: 1.05 })
+        this.ph = new TipoPropiedad({ descripcion: "PH", coeficiente: 1.07 })
         await getRepository(TipoPropiedad).save([this.casa, this.departamento, this.ph])
     }
 
     async crearTiposDeOperacion() {
-        this.venta = new TipoOperacion({ descripcion: "Venta", precioBase: 2000 })
+        this.venta = new TipoOperacion({ descripcion: "Venta", precioBase: 1900 })
         this.alquiler = new TipoOperacion({ descripcion: "Alquiler", precioBase: 272 })
         await getRepository(TipoOperacion).save([this.venta, this.alquiler])
     }
 
     async crearServicios() {
-        this.gas_natural = new Servicio({ descripcion: "Gas natural", coeficiente: 1.05 })
-        this.electricidad = new Servicio({ descripcion: "Electricidad", coeficiente: 1.10 })
+        this.gas_natural = new Servicio({ descripcion: "Gas natural", coeficiente: 1.04 })
+        this.electricidad = new Servicio({ descripcion: "Electricidad", coeficiente: 1.15 })
         this.telefono = new Servicio({ descripcion: "Teléfono", coeficiente: 1.01 })
-        this.agua_corriente = new Servicio({ descripcion: "Agua corriente", coeficiente: 1.3 })
-        this.desague_cloacal = new Servicio({ descripcion: "Desagüe cloacal", coeficiente: 1.15 })
+        this.agua_corriente = new Servicio({ descripcion: "Agua corriente", coeficiente: 1.15 })
+        this.desague_cloacal = new Servicio({ descripcion: "Desagüe cloacal", coeficiente: 1.06 })
 
         await getRepository(Servicio).save([this.gas_natural, this.electricidad, this.telefono, this.agua_corriente, this.desague_cloacal])
     }
@@ -230,15 +261,34 @@ export class Bootstrap {
             fecha: new Date,
             privada: false,
             barrio: this.villaUrquiza,
-            usuario: this.celeste,
+            usuario: this.juan,
             tipoDePropiedad: this.casa,
             tipoDeOperacion: this.venta,
             estado: bueno,
             servicios: [this.electricidad],
             sitios_publicados: [this.zonaProp],
         })
-        await this.tasacion.calcularValor()
+
+        this.tasacion2 = new Tasacion({
+            descripcion: "Tasación sarasa",
+            direccion: "santa fe 3000",
+            ambientes: 2,
+            superficie: 80,
+            fecha: new Date,
+            privada: false,
+            barrio: this.recoleta,
+            usuario: this.celeste,
+            tipoDePropiedad: this.departamento,
+            tipoDeOperacion: this.venta,
+            estado: bueno,
+            servicios: [this.electricidad],
+            sitios_publicados: [this.zonaProp],
+        })
+
+        this.tasacion.calcularValor()
+        this.tasacion2.calcularValor()
         await getRepository(Tasacion).save(this.tasacion)
+        await getRepository(Tasacion).save(this.tasacion2)
     }
 
     async crearUsuarios() {
@@ -247,7 +297,7 @@ export class Bootstrap {
             domicilio: this.domicilioJuan, fecha_nacimiento: new Date()
         })
         this.celeste = new Usuario({
-            nombre: "Celeste", apellido: "Cid", edad: 45, email: "celes@mail.com", genero: "Mujer", contrasenia: "cel",
+            nombre: "Celeste", apellido: "Cid", edad: 45, email: "bmenchon@unsam.edu.ar", genero: "Mujer", contrasenia: "cel",
             domicilio: this.domicilioCeleste, fecha_nacimiento: new Date()
         })
         this.usuarios = [this.juan, this.celeste]
