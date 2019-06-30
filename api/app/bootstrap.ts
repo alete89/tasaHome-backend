@@ -297,7 +297,7 @@ export class Bootstrap {
             domicilio: this.domicilioJuan, fecha_nacimiento: new Date()
         })
         this.celeste = new Usuario({
-            nombre: "Celeste", apellido: "Cid", edad: 45, email: "bmenchon@unsam.edu.ar", genero: "Mujer", contrasenia: "cel",
+            nombre: "Celeste", apellido: "Cid", edad: 45, email: "nico_viotti@hotmail.com", genero: "Mujer", contrasenia: "cel",
             domicilio: this.domicilioCeleste, fecha_nacimiento: new Date()
         })
         this.usuarios = [this.juan, this.celeste]

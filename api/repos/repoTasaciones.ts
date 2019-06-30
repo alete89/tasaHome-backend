@@ -1,8 +1,13 @@
-import { Between, EntityRepository, Repository, Not, MoreThanOrEqual, IsNull } from "typeorm";
+import { Between, EntityRepository, In, MoreThanOrEqual, Not, Repository, MoreThan, LessThan } from "typeorm";
 import { Tasacion } from "../models/tasacion";
+declare var require: any
 
 @EntityRepository(Tasacion)
 export class RepoTasaciones extends Repository<Tasacion> {
+
+    moment = require('moment');
+    MoreThanDate = (date: Date) => MoreThan(this.moment(date).format('YYYY-MM-DD HH:MM:SS'))
+    LessThanDate = (date: Date) => LessThan(this.moment(date).format('YYYY-MM-DD HH:MM:SS'))
 
     async todasLasTasaciones() {
         try {
@@ -79,27 +84,32 @@ export class RepoTasaciones extends Repository<Tasacion> {
     }
 
     async tasacionesSimilares(id_logueado: number, body: any) {
-
-        let tasaciones = await this.find({
-            join: {
-                alias: "tasacion",
-                leftJoinAndSelect: {
-                    tipoDePropiedad: "tasacion.tipoDePropiedad",
-                    barrio: "tasacion.barrio",
-                    usuario: "tasacion.usuario"
+        try {
+            let tasaciones = await this.find({
+                join: {
+                    alias: "tasacion",
+                    leftJoinAndSelect: {
+                        tipoDePropiedad: "tasacion.tipoDePropiedad",
+                        barrio: "tasacion.barrio",
+                        usuario: "tasacion.usuario"
+                    },
                 },
-            },
-            where:
-                [
-                    { usuario: { id: Not(id_logueado) }, barrio: { id: body.id_barrio } },
-                    { usuario: { id: Not(id_logueado) }, ambientes: MoreThanOrEqual(body.ambientes_minimos) },
-                    { usuario: { id: Not(id_logueado) }, tipoDePropiedad: { id: body.id_tipo_propiedad } },
-                    { usuario: { id: Not(id_logueado) }, tipoDeOperacion: { id: body.id_tipo_operacion } },
-                    { usuario: { id: Not(id_logueado) }, superficie: Between(body.superficie_minima, 100000) }
-                ]
-        })
-        console.log("Tasaciones: ", tasaciones)
-        return tasaciones
+                where:
+                    [
+                        { usuario: { id: Not(id_logueado) }, barrio: { id: In(body.ids_barrios) } },
+                        { usuario: { id: Not(id_logueado) }, ambientes: MoreThanOrEqual(body.ambientes_minimos) },
+                        { usuario: { id: Not(id_logueado) }, tipoDePropiedad: { id: body.id_tipo_propiedad } },
+                        { usuario: { id: Not(id_logueado) }, tipoDeOperacion: { id: body.id_tipo_operacion } },
+                        { usuario: { id: Not(id_logueado) }, superficie: Between(body.superficie_minima, 100000) },
+                        { usuario: { id: Not(id_logueado) }, fecha: this.MoreThanDate(new Date(body.fecha_desde)) }
+                    ]
+            })
+            console.log("Tasaciones: ", tasaciones)
+            return tasaciones
+        } catch (error) {
+            return ("se produjo un error")
+        }
+
     }
 
 }
