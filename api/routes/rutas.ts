@@ -143,7 +143,7 @@ module.exports = function (app: express.Application) {
                 tasacion.fecha = new Date()
                 tasacion.descripcion = tasacion.direccion
                 tasacion.usuario = id_usuario
-                // tasacion.validar()
+                tasacion.validar()
                 if (req.body.id) {
                     if (req.body.id_anterior) {
                         tasacion.id_anterior = req.body.id_anterior
@@ -164,17 +164,24 @@ module.exports = function (app: express.Application) {
 
     app.route('/registrar_usuario')
         .post(async function (req, res) {
-            let usuario = Usuario.fromJson(req.body)
-            console.log(req.body)
-            let domicilio = new Domicilio()
-            domicilio.localidad = req.body.localidad
-            domicilio.partido = req.body.partido
-            domicilio.provincia = req.body.provincia
-            domicilio.descripcion = req.body.direccion
-            await getRepository(Domicilio).save(domicilio)
-            usuario.domicilio = domicilio
-            usuario.edad = new Date().getFullYear() - new Date(req.body.fecha_nacimiento).getFullYear()
-            await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
+            try {
+                let usuario = Usuario.fromJson(req.body)
+                console.log(req.body)
+                let domicilio = new Domicilio()
+                domicilio.localidad = req.body.localidad
+                domicilio.partido = req.body.partido
+                domicilio.provincia = req.body.provincia
+                domicilio.descripcion = req.body.direccion
+                await getRepository(Domicilio).save(domicilio)
+                usuario.domicilio = domicilio
+                usuario.edad = new Date().getFullYear() - new Date(req.body.fecha_nacimiento).getFullYear()
+                usuario.validar()
+                await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                });
+            }
             res.send("OK")
         });
 

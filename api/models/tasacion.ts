@@ -71,7 +71,7 @@ export class Tasacion {
     barrio: Barrio
 
     validar() {
-        if (!this.descripcion || !this.ambientes || !this.superficie || !this.fecha || !this.valor) {
+        if (!this.descripcion || !this.ambientes || !this.superficie || !this.fecha || !this.valor || !this.estado || !this.tipoDeOperacion || !this.tipoDePropiedad || !this.usuario) {
             throw "Tasacion inválida"
         }
     }
@@ -82,7 +82,7 @@ export class Tasacion {
             this.tipoDePropiedad.coeficiente *
             ((this.ambientes * 3) / 100 + 1) *
             this.estado.coeficiente *
-            this.servicios.map(servicio => servicio.coeficiente).reduce(function(total, actual){
+            this.servicios.map(servicio => servicio.coeficiente).reduce(function (total, actual) {
                 total = total * actual
                 return total
             }, 1)

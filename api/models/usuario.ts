@@ -37,9 +37,9 @@ export class Usuario {
     domicilio: Domicilio
 
     validar() {
-        // if (!this.nombre || !this.apellido || !this.email || !this.contraseña) {
-        //     throw "Usuario inválido"
-        // }
+        if (!this.nombre || !this.apellido || !this.email || !this.genero || !this.contrasenia) {
+            throw "Usuario inválido"
+        }
     }
 
     static fromJson(usuarioJson: String) {
