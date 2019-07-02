@@ -243,7 +243,7 @@ module.exports = function (app: express.Application) {
     app.route('/barrios')
         .get(async function (req, res) {
             try {
-                let barrios = await getRepository(Barrio).find()
+                let barrios = await getRepository(Barrio).find({order: {descripcion: "ASC"}})
                 res.send(barrios)
             } catch (error) {
                 res.status(400).send({
