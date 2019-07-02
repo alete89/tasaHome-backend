@@ -68,10 +68,10 @@ module.exports = function (app: express.Application) {
             let id_barrio = req.params.id
             let query = await entityManager.query(
                 "SELECT" +
-                "(SELECT count(*) FROM tasahome.escuela as escuela WHERE escuela.id_barrio = ?) as escuelas," +
-                "(SELECT count(*) FROM tasahome.hospital as hospital WHERE hospital.id_barrio = ?) as hospitales," +
-                "(SELECT count(*) FROM tasahome.comisaria as comisaria WHERE comisaria.id_barrio = ?) as comisarias," +
-                "(SELECT count(*) FROM tasahome.espacio_verde as espacio WHERE espacio.id_barrio = ?) as espacios_verdes;"
+                "(SELECT count(*) FROM tasaHome.escuela as escuela WHERE escuela.id_barrio = ?) as escuelas," +
+                "(SELECT count(*) FROM tasaHome.hospital as hospital WHERE hospital.id_barrio = ?) as hospitales," +
+                "(SELECT count(*) FROM tasaHome.comisaria as comisaria WHERE comisaria.id_barrio = ?) as comisarias," +
+                "(SELECT count(*) FROM tasaHome.espacio_verde as espacio WHERE espacio.id_barrio = ?) as espacios_verdes;"
                 , [id_barrio, id_barrio, id_barrio, id_barrio]).catch(function (e) { console.log(e) })
             res.send(query[0])
         });
@@ -83,10 +83,10 @@ module.exports = function (app: express.Application) {
             let id_comuna = req.params.id
             let query = await entityManager.query(
                 "SELECT" +
-                "(SELECT count(*) FROM tasahome.escuela as escuela WHERE escuela.id_barrio in (select id from barrio where id_comuna = ?)) as escuelas," +
-                "(SELECT count(*) FROM tasahome.hospital as hospital WHERE hospital.id_barrio in (select id from barrio where id_comuna = ?)) as hospitales," +
-                "(SELECT count(*) FROM tasahome.comisaria as comisaria WHERE comisaria.id_barrio in (select id from barrio where id_comuna = ?)) as comisarias," +
-                "(SELECT count(*) FROM tasahome.espacio_verde as espacio WHERE espacio.id_barrio in (select id from barrio where id_comuna = ?)) as espacios_verdes;"
+                "(SELECT count(*) FROM tasaHome.escuela as escuela WHERE escuela.id_barrio in (select id from barrio where id_comuna = ?)) as escuelas," +
+                "(SELECT count(*) FROM tasaHome.hospital as hospital WHERE hospital.id_barrio in (select id from barrio where id_comuna = ?)) as hospitales," +
+                "(SELECT count(*) FROM tasaHome.comisaria as comisaria WHERE comisaria.id_barrio in (select id from barrio where id_comuna = ?)) as comisarias," +
+                "(SELECT count(*) FROM tasaHome.espacio_verde as espacio WHERE espacio.id_barrio in (select id from barrio where id_comuna = ?)) as espacios_verdes;"
                 , [id_comuna, id_comuna, id_comuna, id_comuna]).catch(function (e) { console.log(e) })
             res.send(query[0])
         });
