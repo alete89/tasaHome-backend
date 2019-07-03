@@ -3358,9 +3358,64 @@ export class Bootstrap {
     }
 
     async crearComisarias() {
-        let comisaria: Comisaria = new Comisaria()
-        comisaria.barrio = this.villaUrquiza
-        await getRepository(Comisaria).save(comisaria).catch(function (error) {
+        // let comisaria: Comisaria = new Comisaria()
+        // comisaria.barrio = this.villaUrquiza
+        let comisaria_0001: Comisaria = new Comisaria ({ latitud: -34.6019062, longitud: -58.3732447, barrio: this.sanNicolas})
+        let comisaria_0002: Comisaria = new Comisaria ({ latitud: -34.628641, longitud: -58.4249262, barrio: this.boedo})
+        let comisaria_0003: Comisaria = new Comisaria ({ latitud: -34.6089786, longitud: -58.4395014, barrio: this.caballito})
+        let comisaria_0004: Comisaria = new Comisaria ({ latitud: -34.6267799, longitud: -58.4480872, barrio: this.caballito})
+        let comisaria_0005: Comisaria = new Comisaria ({ latitud: -34.6203823, longitud: -58.453221, barrio: this.caballito})
+        let comisaria_0006: Comisaria = new Comisaria ({ latitud: -34.5946429, longitud: -58.380178, barrio: this.retiro})
+        let comisaria_0007: Comisaria = new Comisaria ({ latitud: -34.6226701, longitud: -58.3856078, barrio: this.constitucion})
+        let comisaria_0008: Comisaria = new Comisaria ({ latitud: -34.5911369, longitud: -58.3923586, barrio: this.recoleta})
+        let comisaria_0009: Comisaria = new Comisaria ({ latitud: -34.6225868, longitud: -58.3907487, barrio: this.constitucion})
+        let comisaria_0010: Comisaria = new Comisaria ({ latitud: -34.5940785, longitud: -58.4067193, barrio: this.recoleta})
+        let comisaria_0011: Comisaria = new Comisaria ({ latitud: -34.6202785, longitud: -58.3741471, barrio: this.sanTelmo})
+        let comisaria_0012: Comisaria = new Comisaria ({ latitud: -34.6260322, longitud: -58.4032266, barrio: this.sanCristobal})
+        let comisaria_0013: Comisaria = new Comisaria ({ latitud: -34.5877321, longitud: -58.4159273, barrio: this.palermo})
+        let comisaria_0014: Comisaria = new Comisaria ({ latitud: -34.6242794, longitud: -58.3639902, barrio: this.puertoMadero})
+        let comisaria_0015: Comisaria = new Comisaria ({ latitud: -34.6341692, longitud: -58.3605876, barrio: this.boca})
+        let comisaria_0016: Comisaria = new Comisaria ({ latitud: -34.6380627, longitud: -58.3749086, barrio: this.barracas})
+        let comisaria_0017: Comisaria = new Comisaria ({ latitud: -34.5993206, longitud: -58.4410843, barrio: this.villaCrespo})
+        let comisaria_0018: Comisaria = new Comisaria ({ latitud: -34.6019397, longitud: -58.3888959, barrio: this.sanNicolas})
+        let comisaria_0019: Comisaria = new Comisaria ({ latitud: -34.6472841, longitud: -58.3747273, barrio: this.barracas})
+        let comisaria_0020: Comisaria = new Comisaria ({ latitud: -34.5733086, longitud: -58.4389558, barrio: this.palermo})
+        let comisaria_0021: Comisaria = new Comisaria ({ latitud: -34.5601448, longitud: -58.4562848, barrio: this.belgrano})
+        let comisaria_0022: Comisaria = new Comisaria ({ latitud: -34.6447947, longitud: -58.417156, barrio: this.nuevaPompeya})
+        let comisaria_0023: Comisaria = new Comisaria ({ latitud: -34.5513755, longitud: -58.4633266, barrio: this.nuniez})
+        let comisaria_0024: Comisaria = new Comisaria ({ latitud: -34.6773575, longitud: -58.4542669, barrio: this.villaSoldati})
+        let comisaria_0025: Comisaria = new Comisaria ({ latitud: -34.5731163, longitud: -58.4758211, barrio: this.villaUrquiza})
+        let comisaria_0026: Comisaria = new Comisaria ({ latitud: -34.6309235, longitud: -58.458256, barrio: this.flores})
+        let comisaria_0027: Comisaria = new Comisaria ({ latitud: -34.5786895, longitud: -58.4900574, barrio: this.villaUrquiza})
+        let comisaria_0028: Comisaria = new Comisaria ({ latitud: -34.6171616, longitud: -58.3785775, barrio: this.monserrat})
+        let comisaria_0029: Comisaria = new Comisaria ({ latitud: -34.6414623, longitud: -58.4763367, barrio: this.parqueAvellaneda})
+        let comisaria_0030: Comisaria = new Comisaria ({ latitud: -34.6111204, longitud: -58.4729911, barrio: this.villaGralMitre})
+        let comisaria_0031: Comisaria = new Comisaria ({ latitud: -34.6619939, longitud: -58.5011657, barrio: this.mataderos})
+        let comisaria_0032: Comisaria = new Comisaria ({ latitud: -34.6288067, longitud: -58.4837795, barrio: this.floresta})
+        let comisaria_0033: Comisaria = new Comisaria ({ latitud: -34.6295361, longitud: -58.5240388, barrio: this.versalles})
+        let comisaria_0034: Comisaria = new Comisaria ({ latitud: -34.5983146, longitud: -58.5156059, barrio: this.villaDevoto})
+        let comisaria_0035: Comisaria = new Comisaria ({ latitud: -34.5897128, longitud: -58.4993673, barrio: this.villaPueyrredon})
+        let comisaria_0036: Comisaria = new Comisaria ({ latitud: -34.679035, longitud: -58.4748889, barrio: this.villaLugano})
+        let comisaria_0037: Comisaria = new Comisaria ({ latitud: -34.5651451, longitud: -58.4825254, barrio: this.villaUrquiza})
+        let comisaria_0038: Comisaria = new Comisaria ({ latitud: -34.6034184, longitud: -58.3947891, barrio: this.balvanera})
+        let comisaria_0039: Comisaria = new Comisaria ({ latitud: -34.6161137, longitud: -58.4648209, barrio: this.flores})
+        let comisaria_0040: Comisaria = new Comisaria ({ latitud: -34.5548216, longitud: -58.444068, barrio: this.belgrano})
+        let comisaria_0041: Comisaria = new Comisaria ({ latitud: -34.6831212, longitud: -58.4689437, barrio: this.villaLugano})
+        let comisaria_0042: Comisaria = new Comisaria ({ latitud: -34.5812697, longitud: -58.4136589, barrio: this.palermo})
+        let comisaria_0043: Comisaria = new Comisaria ({ latitud: -34.6399669, longitud: -58.5050865, barrio: this.villaLuro})
+        let comisaria_0044: Comisaria = new Comisaria ({ latitud: -34.6032112, longitud: -58.4040106, barrio: this.balvanera})
+        let comisaria_0045: Comisaria = new Comisaria ({ latitud: -34.6170576, longitud: -58.4092796, barrio: this.balvanera})
+        let comisaria_0046: Comisaria = new Comisaria ({ latitud: -34.6044286, longitud: -58.4155588, barrio: this.almagro})
+        let comisaria_0047: Comisaria = new Comisaria ({ latitud: -34.5511031, longitud: -58.4909092, barrio: this.saavedra})
+        let comisaria_0048: Comisaria = new Comisaria ({ latitud: -34.5904202, longitud: -58.4512304, barrio: this.chacarita})
+        let comisaria_0049: Comisaria = new Comisaria ({ latitud: -34.6419495, longitud: -58.4028302, barrio: this.parquePatricios})
+
+        await getRepository(Comisaria).save([comisaria_0001, comisaria_0002, comisaria_0003, comisaria_0004, comisaria_0005, comisaria_0006, comisaria_0007, 
+        comisaria_0008, comisaria_0009, comisaria_0010, comisaria_0011, comisaria_0012, comisaria_0013, comisaria_0014, comisaria_0015, comisaria_0016, comisaria_0017,
+        comisaria_0018, comisaria_0019, comisaria_0020, comisaria_0021, comisaria_0022, comisaria_0023, comisaria_0024, comisaria_0025, comisaria_0026, comisaria_0027,
+        comisaria_0028, comisaria_0029, comisaria_0030, comisaria_0031, comisaria_0032, comisaria_0033, comisaria_0034, comisaria_0035, comisaria_0036, comisaria_0037,
+        comisaria_0038, comisaria_0039, comisaria_0040, comisaria_0041, comisaria_0042, comisaria_0043, comisaria_0044, comisaria_0045, comisaria_0046, comisaria_0047, 
+        comisaria_0048,comisaria_0049]).catch(function (error) {
             console.log(error)
         })
     }
