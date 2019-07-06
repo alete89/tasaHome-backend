@@ -62,17 +62,30 @@ module.exports = function (app: express.Application) {
             res.send(await getCustomRepository(RepoUsuarios).recuperarContraseña(req.body.email));
         });
 
+    const query_datos_por_barrio = async function (id_barrio: number) {
+        const entityManager = getManager()
+        let query = await entityManager.query(
+            "SELECT" +
+            "(SELECT count(*) FROM tasaHome.escuela as escuela WHERE escuela.id_barrio = ?) as escuelas," +
+            "(SELECT count(*) FROM tasaHome.hospital as hospital WHERE hospital.id_barrio = ?) as hospitales," +
+            "(SELECT count(*) FROM tasaHome.comisaria as comisaria WHERE comisaria.id_barrio = ?) as comisarias," +
+            "(SELECT count(*) FROM tasaHome.espacio_verde as espacio WHERE espacio.id_barrio = ?) as espacios_verdes;"
+            , [id_barrio, id_barrio, id_barrio, id_barrio]).catch(function (e) { console.log(e) })
+        return query
+    }
+
     app.route('/datos/barrio/:id')
         .get(async function (req, res) {
-            const entityManager = getManager()
             let id_barrio = req.params.id
-            let query = await entityManager.query(
-                "SELECT" +
-                "(SELECT count(*) FROM tasaHome.escuela as escuela WHERE escuela.id_barrio = ?) as escuelas," +
-                "(SELECT count(*) FROM tasaHome.hospital as hospital WHERE hospital.id_barrio = ?) as hospitales," +
-                "(SELECT count(*) FROM tasaHome.comisaria as comisaria WHERE comisaria.id_barrio = ?) as comisarias," +
-                "(SELECT count(*) FROM tasaHome.espacio_verde as espacio WHERE espacio.id_barrio = ?) as espacios_verdes;"
-                , [id_barrio, id_barrio, id_barrio, id_barrio]).catch(function (e) { console.log(e) })
+            let query: any = await query_datos_por_barrio(id_barrio)
+            res.send(query[0])
+        });
+
+    app.route('/datos/barrio-nombre/')
+        .put(async function (req, res) {
+            let nombre_barrio = req.body.barrio
+            let barrio = await getRepository(Barrio).findOneOrFail({ descripcion: nombre_barrio })
+            let query: any = await query_datos_por_barrio(barrio.id)
             res.send(query[0])
         });
 
@@ -243,7 +256,7 @@ module.exports = function (app: express.Application) {
     app.route('/barrios')
         .get(async function (req, res) {
             try {
-                let barrios = await getRepository(Barrio).find({order: {descripcion: "ASC"}})
+                let barrios = await getRepository(Barrio).find({ order: { descripcion: "ASC" } })
                 res.send(barrios)
             } catch (error) {
                 res.status(400).send({
