@@ -178,6 +178,10 @@ module.exports = function (app: express.Application) {
     app.route('/registrar_usuario')
         .post(async function (req, res) {
             try {
+                let usuarioYaExistente = await getCustomRepository(RepoUsuarios).findOne({ email: req.body.email })
+                if (usuarioYaExistente) {
+                    throw "Ya existe un usuario registrado con el email " + req.body.email
+                }
                 let usuario = Usuario.fromJson(req.body)
                 console.log(req.body)
                 let domicilio = new Domicilio()
@@ -190,13 +194,14 @@ module.exports = function (app: express.Application) {
                 usuario.edad = new Date().getFullYear() - new Date(req.body.fecha_nacimiento).getFullYear()
                 usuario.validar()
                 await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
+                res.send("OK")
             } catch (error) {
                 res.status(400).send({
                     message: error
                 });
             }
-            res.send("OK")
         });
+
 
     app.route('/sitios_publicacion')
         .get(async function (req, res) {
@@ -362,3 +367,4 @@ module.exports = function (app: express.Application) {
 
 
 };
+
