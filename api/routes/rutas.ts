@@ -17,6 +17,9 @@ import { Servicio } from '../models/servicio';
 import { EmailService } from '../servicios/emailService';
 import { SitioPublicacion } from '../models/sitio_publicacion';
 import { Escuela } from '../models/escuela';
+import { Hospital } from '../models/hospital';
+import { Comisaria } from '../models/comisaria';
+import { EspacioVerde } from '../models/espacio_verde';
 
 // 'use strict';
 module.exports = function (app: express.Application) {
@@ -312,6 +315,42 @@ module.exports = function (app: express.Application) {
             try {
                 let escuelas = await getRepository(Escuela).find()
                 res.send(escuelas)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            }
+        })
+
+    app.route('/hospitales')
+        .get(async function (req, res) {
+            try {
+                let hospitales = await getRepository(Hospital).find()
+                res.send(hospitales)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            }
+        })
+
+    app.route('/comisarias')
+        .get(async function (req, res) {
+            try {
+                let comisarias = await getRepository(Comisaria).find()
+                res.send(comisarias)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                })
+            }
+        })
+
+    app.route('/espacios-verdes')
+        .get(async function (req, res) {
+            try {
+                let espacios = await getRepository(EspacioVerde).find()
+                res.send(espacios)
             } catch (error) {
                 res.status(400).send({
                     message: error
