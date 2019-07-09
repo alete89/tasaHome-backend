@@ -2,10 +2,6 @@ import express = require('express');
 import { getCustomRepository, getManager, getRepository } from 'typeorm';
 import { Barrio } from '../models/barrio';
 import { Comuna } from '../models/comuna';
-import { Domicilio } from '../models/domicilio';
-import { Localidad } from '../models/localidad';
-import { Partido } from '../models/partido';
-import { Provincia } from '../models/provincia';
 import { Tasacion } from '../models/tasacion';
 import { TipoOperacion } from '../models/tipo_operacion';
 import { TipoPropiedad } from '../models/tipo_propiedad';
@@ -187,13 +183,7 @@ module.exports = function (app: express.Application) {
                 }
                 let usuario = Usuario.fromJson(req.body)
                 console.log(req.body)
-                let domicilio = new Domicilio()
-                domicilio.localidad = req.body.localidad
-                domicilio.partido = req.body.partido
-                domicilio.provincia = req.body.provincia
-                domicilio.descripcion = req.body.direccion
-                await getRepository(Domicilio).save(domicilio)
-                usuario.domicilio = domicilio
+                usuario.domicilio = direccion
                 usuario.edad = new Date().getFullYear() - new Date(req.body.fecha_nacimiento).getFullYear()
                 usuario.validar()
                 await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
@@ -223,43 +213,6 @@ module.exports = function (app: express.Application) {
             //TODO
             res.send("OK")
         });
-
-    app.route('/provincias')
-        .get(async function (req, res) {
-            try {
-                let provincias = await getRepository(Provincia).find()
-                res.send(provincias)
-            } catch (error) {
-                res.status(400).send({
-                    message: error
-                })
-            }
-        })
-
-    app.route('/partidos/:id')
-        .get(async function (req, res) {
-            try {
-                let partidos = await getRepository(Partido).find({ where: { provincia: req.params.id } })
-                res.send(partidos)
-            } catch (error) {
-                res.status(400).send({
-                    message: error
-                })
-            }
-        })
-
-    app.route('/localidades/:id')
-        .get(async function (req, res) {
-            try {
-                let localidades = await getRepository(Localidad).find({ where: { partido: req.params.id } })
-                res.send(localidades)
-            } catch (error) {
-                res.status(400).send({
-                    message: error
-                })
-            }
-        })
-
 
     app.route('/barrios')
         .get(async function (req, res) {

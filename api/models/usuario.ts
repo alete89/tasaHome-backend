@@ -1,5 +1,4 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Domicilio } from "./domicilio";
 
 @Entity()
 export class Usuario {
@@ -32,9 +31,8 @@ export class Usuario {
     @Column()
     contrasenia: String
 
-    @ManyToOne(type => Domicilio)
-    @JoinColumn({ name: "id_domicilio" })
-    domicilio: Domicilio
+    @Column()
+    domicilio: String
 
     validar() {
         if (!this.nombre || !this.apellido || !this.email || !this.genero || !this.contrasenia) {

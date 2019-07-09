@@ -1,10 +1,6 @@
 import { createConnection, getCustomRepository, getRepository, Repository } from "typeorm";
 import { Barrio } from "../models/barrio";
-import { Domicilio } from "../models/domicilio";
 import { Escuela } from "../models/escuela";
-import { Localidad } from "../models/localidad";
-import { Partido } from "../models/partido";
-import { Provincia } from "../models/provincia";
 import { Tasacion } from "../models/tasacion";
 import { Usuario } from "../models/usuario";
 import { RepoUsuarios } from "../repos/repoUsuarios";
@@ -23,14 +19,7 @@ export class Bootstrap {
     usuarios: Usuario[] = []
     juan: Usuario
     celeste: Usuario
-    domicilios: Domicilio[]
-    domicilioJuan: Domicilio
-    domicilioCeleste: Domicilio
     repoUsuarios: RepoUsuarios
-    repoDomicilio: Repository<Domicilio>
-    sanMartin: Partido
-    ballester: Localidad
-    buenosAires: Provincia
     constitucion: Barrio
     monserrat: Barrio
     puertoMadero: Barrio
@@ -131,14 +120,12 @@ export class Bootstrap {
             this.repoUsuarios = getCustomRepository(RepoUsuarios);
             let noHayUsuarios = await this.repoUsuarios.noHayUsuarios()
             if (noHayUsuarios) {
-                this.repoDomicilio = getRepository(Domicilio)
                 await this.crearComunas()
                 await this.crearBarrios()
                 await this.crearEscuelas()
                 await this.crearComisarias()
                 await this.crearEspacios()
                 await this.crearHospitales()
-                await this.crearDomicilios()
                 await this.crearUsuarios()
                 await this.crearTiposDePropiedad()
                 await this.crearTiposDeOperacion()
@@ -5040,27 +5027,6 @@ export class Bootstrap {
         })
     }
 
-    async crearDomicilios() {
-        this.buenosAires = new Provincia({ descripcion: "Buenos Aires" })
-        this.sanMartin = new Partido({ descripcion: "San Martín", provincia: this.buenosAires })
-        this.ballester = new Localidad({ descripcion: "Villa Ballester", partido: this.sanMartin })
-        await getRepository(Provincia).save(this.buenosAires)
-        await getRepository(Partido).save(this.sanMartin)
-        await getRepository(Localidad).save(this.ballester)
-        this.domicilioJuan = new Domicilio({
-            descripcion: "Posadas 1515",
-            provincia: this.buenosAires, partido: this.sanMartin,
-            localidad: this.ballester
-        })
-        this.domicilioCeleste = new Domicilio({
-            descripcion: "Ayacucho 3520",
-            provincia: this.buenosAires,
-            partido: this.sanMartin,
-            localidad: this.ballester
-        })
-        this.domicilios = [this.domicilioJuan, this.domicilioCeleste]
-        await this.repoDomicilio.save(this.domicilios)
-    }
 
     async crearTiposDePropiedad() {
         this.casa = new TipoPropiedad({ descripcion: "Casa", coeficiente: 1.15 })
@@ -5159,11 +5125,11 @@ export class Bootstrap {
     async crearUsuarios() {
         this.juan = new Usuario({
             nombre: "Juan", apellido: "Perez", edad: 20, email: "juanp@mail.com", genero: "Hombre", contrasenia: "123",
-            domicilio: this.domicilioJuan, fecha_nacimiento: new Date()
+            domicilio: "Laprida 4545", fecha_nacimiento: new Date()
         })
         this.celeste = new Usuario({
             nombre: "Celeste", apellido: "Cid", edad: 45, email: "nico_viotti@hotmail.com", genero: "Mujer", contrasenia: "cel",
-            domicilio: this.domicilioCeleste, fecha_nacimiento: new Date()
+            domicilio: "Aguero 3000", fecha_nacimiento: new Date()
         })
         this.usuarios = [this.juan, this.celeste]
         await this.repoUsuarios.guardarUsuarios(this.usuarios)
