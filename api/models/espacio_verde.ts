@@ -11,10 +11,10 @@ export class EspacioVerde {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ nullable: true })
+    @Column("decimal", { nullable: true, precision: 20, scale: 15 }) 
     longitud: number
 
-    @Column({ nullable: true })
+    @Column("decimal", { nullable: true, precision: 20, scale: 15 }) 
     latitud: number
 
     @Column({ nullable: true })
