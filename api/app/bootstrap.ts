@@ -5086,7 +5086,7 @@ export class Bootstrap {
 
         this.tasacion = new Tasacion({
             descripcion: "Tasación prueba",
-            direccion: "Corrientes 3000",
+            direccion: "Plaza Gral. Lavalle, Talcahuano 610, C1013AAN CABA, Argentina",
             ambientes: 5,
             superficie: 250,
             fecha: new Date,
@@ -5101,7 +5101,7 @@ export class Bootstrap {
 
         this.tasacion2 = new Tasacion({
             descripcion: "Tasación sarasa",
-            direccion: "santa fe 3000",
+            direccion: "Av. Corrientes 3000, C1193AAO CABA, Argentina",
             ambientes: 2,
             superficie: 80,
             fecha: new Date,
