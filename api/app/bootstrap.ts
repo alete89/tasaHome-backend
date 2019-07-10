@@ -5097,7 +5097,6 @@ export class Bootstrap {
             tipoDeOperacion: this.venta,
             estado: bueno,
             servicios: [this.electricidad],
-            sitios_publicados: [this.zonaProp],
         })
 
         this.tasacion2 = new Tasacion({
@@ -5113,7 +5112,6 @@ export class Bootstrap {
             tipoDeOperacion: this.venta,
             estado: bueno,
             servicios: [this.electricidad],
-            sitios_publicados: [this.zonaProp],
         })
 
         this.tasacion.calcularValor()

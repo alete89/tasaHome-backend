@@ -58,7 +58,6 @@ export class RepoTasaciones extends Repository<Tasacion> {
                 leftJoinAndSelect: {
                     tipoDePropiedad: "tasacion.tipoDePropiedad",
                     barrio: "tasacion.barrio",
-                    sitios_publicados: "tasacion.sitios_publicados"
                 }
             }, where: { usuario: { id: id_usuario, } },
             order: {

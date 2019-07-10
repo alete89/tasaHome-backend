@@ -61,10 +61,6 @@ export class Tasacion {
     @JoinTable({ name: "servicio_tasacion" })
     servicios: Servicio[]
 
-    @ManyToMany(type => SitioPublicacion)
-    @JoinTable({ name: "sitio_tasacion" })
-    sitios_publicados: SitioPublicacion[]
-
     @ManyToOne(type => Barrio)
     @JoinColumn({ name: "id_barrio" })
     barrio: Barrio
