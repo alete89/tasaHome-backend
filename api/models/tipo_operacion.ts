@@ -11,7 +11,7 @@ export class TipoOperacion {
     id: number
    
     @Column()
-    descripcion: String
+    descripcion: string
 
     @Column()
     precioBase: number

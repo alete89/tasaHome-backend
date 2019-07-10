@@ -18,7 +18,7 @@ export class Hospital {
     latitud: number
 
     @Column()
-    descripcion: String
+    descripcion: string
 
     @Column({ nullable: true })
     fecha_actualizacion: Date

@@ -11,7 +11,7 @@ export class Estado {
     id: number
 
     @Column()
-    descripcion: String
+    descripcion: string
 
     @Column("decimal", { nullable: true, precision: 20, scale: 10 })
     coeficiente: number

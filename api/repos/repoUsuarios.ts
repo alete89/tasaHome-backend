@@ -12,7 +12,7 @@ export class RepoUsuarios extends Repository<Usuario> {
         }
     }
 
-    async login(posible_email: String, posible_password: String) {
+    async login(posible_email: string, posible_password: string) {
         try {
             let usuario: any = await this.findOneOrFail({ email: posible_email })
             if (usuario.contrasenia != posible_password) {
@@ -24,7 +24,7 @@ export class RepoUsuarios extends Repository<Usuario> {
         }
     }
 
-    async recuperarContraseña(email: String) {
+    async recuperarContraseña(email: string) {
         //TODO
     }
 
@@ -58,7 +58,7 @@ export class RepoUsuarios extends Repository<Usuario> {
         }
     }
 
-    async contactar_usuario(email: String, mensaje: String) {
+    async contactar_usuario(email: string, mensaje: string) {
         //TODO
     }
 

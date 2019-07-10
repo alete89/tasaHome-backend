@@ -11,13 +11,13 @@ export class SitioPublicacion {
     id: number
 
     @Column()
-    descripcion: String
+    descripcion: string
 
     @Column({ nullable: true })
-    logo_url: String
+    logo_url: string
 
     @Column()
-    url_publicar: String
+    url_publicar: string
 
     @Column({ nullable: true })
     fecha: boolean

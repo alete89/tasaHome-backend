@@ -12,7 +12,7 @@ export class Barrio {
     id: number
 
     @Column()
-    descripcion: String
+    descripcion: string
     
     @ManyToOne(type => Comuna)
     @JoinColumn({ name: "id_comuna" })

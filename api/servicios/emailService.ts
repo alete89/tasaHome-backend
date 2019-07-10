@@ -4,7 +4,7 @@ export class EmailService {
 
     nodeMailer = require('nodemailer')
 
-    emailTasaHome: String = 'tasacioneshome@gmail.com'
+    emailTasaHome: string = 'tasacioneshome@gmail.com'
 
     transporter: any
 
@@ -25,7 +25,7 @@ export class EmailService {
     }
 
 
-    enviarEmail(emisor: Usuario, email_receptor: String, mensaje: String) {
+    enviarEmail(emisor: Usuario, email_receptor: string, mensaje: string) {
 
         let mailOptions = {
             
@@ -44,7 +44,7 @@ export class EmailService {
         })
     }
 
-    recuperarContrasenia(email_receptor: String, link: String) {
+    recuperarContrasenia(email_receptor: string, link: string) {
 
         let mailOptions = {
             

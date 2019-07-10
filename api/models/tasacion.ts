@@ -18,7 +18,7 @@ export class Tasacion {
     id: number | undefined
 
     @Column({ nullable: true })
-    descripcion: String
+    descripcion: string
 
     @Column({ nullable: true })
     ambientes: number
@@ -36,7 +36,7 @@ export class Tasacion {
     privada: boolean
 
     @Column({ nullable: true })
-    direccion: String
+    direccion: string
 
     @Column({ nullable: true })
     id_anterior: number
@@ -86,7 +86,7 @@ export class Tasacion {
         // (await this.servicios).coeficiente //iterar por los servicios
     }
 
-    static fromJson(tasacionJson: String) {
+    static fromJson(tasacionJson: string) {
         return Object.assign(new Tasacion(), tasacionJson)
     }
 }

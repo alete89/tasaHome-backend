@@ -11,31 +11,31 @@ export class Usuario {
     id: number
 
     @Column()
-    nombre: String
+    nombre: string
 
     @Column()
-    apellido: String
+    apellido: string
 
     @Column()
     edad: number
 
     @Column()
-    email: String
+    email: string
 
     @Column()
-    genero: String
+    genero: string
 
     @Column()
     fecha_nacimiento: Date
 
     @Column()
-    contrasenia: String
+    contrasenia: string
 
     @Column()
-    domicilio: String
+    domicilio: string
 
     @Column({ nullable: true })
-    token_recuperacion: String
+    token_recuperacion: string
 
     validar() {
         if (!this.nombre || !this.apellido || !this.email || !this.genero || !this.contrasenia) {
@@ -43,7 +43,7 @@ export class Usuario {
         }
     }
 
-    static fromJson(usuarioJson: String) {
+    static fromJson(usuarioJson: string) {
         return Object.assign(new Usuario(), usuarioJson)
     }
 }

@@ -12,7 +12,7 @@ export class Publicacion {
     id: number
 
     @Column()
-    descripcion: String
+    descripcion: string
 
     @Column()
     fecha: Date

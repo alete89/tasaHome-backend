@@ -11,5 +11,5 @@ export class Comuna {
     id: number
 
     @Column()
-    descripcion: String
+    descripcion: string
 }
