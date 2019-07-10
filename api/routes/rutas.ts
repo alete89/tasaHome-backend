@@ -168,6 +168,8 @@ module.exports = function (app: express.Application) {
                 tasacion.fecha = new Date()
                 tasacion.descripcion = tasacion.direccion
                 tasacion.usuario = id_usuario
+                let barrio = await getRepository(Barrio).findOneOrFail({ descripcion: req.body.barrio })
+                tasacion.barrio = barrio
                 tasacion.validar()
                 if (req.body.id) {
                     if (req.body.id_anterior) {
