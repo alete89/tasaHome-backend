@@ -17,6 +17,9 @@ export class EspacioVerde {
     @Column("decimal", { nullable: true, precision: 20, scale: 15 }) 
     latitud: number
 
+    @Column()
+    descripcion: String
+
     @Column({ nullable: true })
     fecha_actualizacion: Date
 
