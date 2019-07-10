@@ -32,6 +32,16 @@ export class RepoUsuarios extends Repository<Usuario> {
         return await this.findOneOrFail(id)
     }
 
+    async searchByEmail(posible_email: string) {
+        let usuario: Usuario = await this.findOneOrFail({ email: posible_email })
+        return usuario
+    }
+
+    async searchByToken(token: string) {
+        let usuario: Usuario = await this.findOneOrFail({ token_recuperacion: token })
+        return usuario
+    }
+
     async noHayUsuarios() {
         try {
             return await this.count() == 0

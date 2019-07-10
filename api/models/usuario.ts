@@ -34,6 +34,9 @@ export class Usuario {
     @Column()
     domicilio: String
 
+    @Column({ nullable: true })
+    token_recuperacion: String
+
     validar() {
         if (!this.nombre || !this.apellido || !this.email || !this.genero || !this.contrasenia) {
             throw "Usuario inválido"

@@ -45,6 +45,19 @@ module.exports = function (app: express.Application) {
             res.send(await getCustomRepository(RepoUsuarios).searchById(req.params.id));
         });
 
+    app.route('/usuarios/token')
+        .post(async function (req, res) {
+            try {
+                const usuario = await getCustomRepository(RepoUsuarios).searchByToken(req.body.token)
+                console.log(usuario)
+                res.send(usuario);
+            } catch (error) {
+                res.status(404).send({
+                    message: error
+                });
+            }
+        });
+
     app.route('/login')
         .post(async function (req, res) {
             try {
@@ -196,6 +209,21 @@ module.exports = function (app: express.Application) {
         });
 
 
+    app.route('/reestablecer_contrasenia')
+        .put(async function (req, res) {
+            try {
+                let usuario = await getCustomRepository(RepoUsuarios).searchByToken(req.body.token)
+                usuario.contrasenia = req.body.contrasenia
+                usuario.token_recuperacion = ""
+                await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
+                res.send("OK")
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                });
+            }
+        })
+
     app.route('/sitios_publicacion')
         .get(async function (req, res) {
             try {
@@ -346,6 +374,29 @@ module.exports = function (app: express.Application) {
                 res.send("OK")
             } catch (error) {
                 res.status(400).send({
+                    message: error
+                })
+            }
+
+        });
+
+
+    app.route('/recuperar_contrasenia/')
+        .post(async function (req, res) {
+            try {
+                let email: string = req.body.email
+                const repo_usuarios = getCustomRepository(RepoUsuarios)
+                let usuario: Usuario = await repo_usuarios.searchByEmail(email)
+                const token = (Math.random() * 10000000000000000).toString()
+                // let prueba = [...Array(30)].map(() => Math.random().toString(36)[2]).join('')
+                let mensaje = "http://localhost:4200/recuperar_contrasenia/" + token
+                let email_service = new EmailService()
+                email_service.recuperarContrasenia(email, mensaje)
+                usuario.token_recuperacion = token
+                repo_usuarios.save(usuario)
+                res.send("OK")
+            } catch (error) {
+                res.status(404).send({
                     message: error
                 })
             }
