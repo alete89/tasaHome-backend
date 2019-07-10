@@ -69,11 +69,6 @@ module.exports = function (app: express.Application) {
             }
         });
 
-    app.route('/usuarios/recuperar_contraseña')
-        .get(async function (req, res) {
-            res.send(await getCustomRepository(RepoUsuarios).recuperarContraseña(req.body.email));
-        });
-
     const query_datos_por_barrio = async function (id_barrio: number) {
         const entityManager = getManager()
         let query = await entityManager.query(
@@ -391,7 +386,7 @@ module.exports = function (app: express.Application) {
                 let usuario: Usuario = await repo_usuarios.searchByEmail(email)
                 const token = (Math.random() * 10000000000000000).toString()
                 // let prueba = [...Array(30)].map(() => Math.random().toString(36)[2]).join('')
-                let mensaje = "http://localhost:4200/recuperar_contrasenia/" + token
+                let mensaje = "http://localhost:4200/restablecer-contrasenia/" + token
                 let email_service = new EmailService()
                 email_service.recuperarContrasenia(email, mensaje)
                 usuario.token_recuperacion = token
