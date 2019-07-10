@@ -183,7 +183,7 @@ module.exports = function (app: express.Application) {
                 }
                 let usuario = Usuario.fromJson(req.body)
                 console.log(req.body)
-                usuario.domicilio = direccion
+                usuario.domicilio = req.body.direccion
                 usuario.edad = new Date().getFullYear() - new Date(req.body.fecha_nacimiento).getFullYear()
                 usuario.validar()
                 await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])

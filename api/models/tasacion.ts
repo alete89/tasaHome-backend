@@ -6,7 +6,6 @@ import { SitioPublicacion } from "./sitio_publicacion";
 import { TipoOperacion } from "./tipo_operacion";
 import { TipoPropiedad } from "./tipo_propiedad";
 import { Usuario } from "./usuario";
-import { Direccion } from "./direccion";
 
 @Entity()
 export class Tasacion {
