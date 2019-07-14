@@ -113,7 +113,7 @@ module.exports = function (app: express.Application) {
 
     app.route('/tasacion/:id')
         .get(async function (req, res) {
-            console.log(await getCustomRepository(RepoTasaciones).searchById(req.params.id))
+            // console.log(await getCustomRepository(RepoTasaciones).searchById(req.params.id))
             res.send(await getCustomRepository(RepoTasaciones).searchById(req.params.id));
         });
 
@@ -157,14 +157,14 @@ module.exports = function (app: express.Application) {
             try {
                 let id_usuario = req.params.id
                 let tasacion: Tasacion = Tasacion.fromJson(req.body);
-                tasacion.tipoDeOperacion = req.body.tipoDeOperacion
-                tasacion.tipoDePropiedad = req.body.tipoDePropiedad
-                tasacion.estado = req.body.estado
                 tasacion.fecha = new Date()
                 tasacion.descripcion = tasacion.direccion
                 tasacion.usuario = id_usuario
-                let barrio = await getRepository(Barrio).findOneOrFail({ descripcion: req.body.barrio })
-                tasacion.barrio = barrio
+                console.log(req.body)
+                if (!req.body.barrio.id) {
+                    let barrio = await getRepository(Barrio).findOneOrFail({ descripcion: req.body.barrio.descripcion })
+                    tasacion.barrio = barrio
+                }
                 tasacion.validar()
                 if (req.body.id) {
                     if (req.body.id_anterior) {

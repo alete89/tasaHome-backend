@@ -26,6 +26,7 @@ export class RepoTasaciones extends Repository<Tasacion> {
                 leftJoinAndSelect: {
                     tipoDePropiedad: "tasacion.tipoDePropiedad",
                     tipoDeOperacion: "tasacion.tipoDeOperacion",
+                    barrio: "tasacion.barrio",
                     estado: "tasacion.estado",
                     servicios: "tasacion.servicios"
                 },
