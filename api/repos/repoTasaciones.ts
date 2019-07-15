@@ -72,6 +72,12 @@ export class RepoTasaciones extends Repository<Tasacion> {
 
     async historial_tasacion(id_tasacion: string) {
         let tasacion = await this.find({
+            join: {
+                alias: "tasacion",
+                leftJoinAndSelect: {
+                    tipoDePropiedad: "tasacion.tipoDePropiedad",
+                }
+            },
             where: [
                 { id: id_tasacion },
                 { id_anterior: id_tasacion }
