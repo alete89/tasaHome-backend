@@ -394,7 +394,7 @@ module.exports = function (app: express.Application) {
                 res.send("OK")
             } catch (error) {
                 res.status(404).send({
-                    message: error
+                    message: "Usuario no encontrado"
                 })
             }
 
