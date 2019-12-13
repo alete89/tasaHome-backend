@@ -81,6 +81,48 @@ module.exports = function (app: express.Application) {
         return query
     }
 
+  /*  const query_adm_usuarios = async function (estado: String, fecha_alta: Date, fecha_modificacion: Date, cant_tasaciones: number) {
+        //const query_adm_usuarios = async function () {
+        const entityManager = getManager()
+        let query = await entityManager.query(
+            "SELECT" +
+	        "email" +
+            ", 'ACTIV0'" +
+            ", '2019-06-01'" +
+            ", STR_TO_DATE('2019-06-01','%Y-%m-%d')" +
+            ", STR_TO_DATE('2019-12-02','%Y-%m-%d')" +
+            ", count(t.id)" +
+            " FROM usuario u" +
+	        " INNER JOIN tasacion t" +
+		    " ON u.id = t.id_usuario" +
+            "GROUP BY 1;"
+            , [estado, estado, estado ,estado]).catch(function (e) { console.log(e) })
+        return query
+    }*/
+
+    const query_adm_usuarios = async function (estado: String, fecha_alta: Date, fecha_modificacion: Date, cant_tasaciones: number) {
+        const entityManager = getManager()
+        let query = await entityManager.query(
+            "SELECT" +
+            " email" +
+            ", 'ACTIVO' AS estado" +
+            ", STR_TO_DATE('2019-06-01','%Y-%m-%d') AS fecha_alta" +
+            ", STR_TO_DATE('2019-12-18','%Y-%m-%d') AS fecha_modificacion" +
+            ", count(t.id) AS cant_tasaciones" +
+            " FROM usuario u" +
+	        " INNER JOIN tasacion t" +
+		    " ON u.id = t.id_usuario" +
+            " GROUP BY 1;"
+            , []).catch(function (e) { console.log(e) })
+        return query
+    }
+
+    app.route('/administracion/')
+        .get(async function(req, res){
+            let query: any = await query_adm_usuarios('a', new Date(), new Date(), 8)
+            res.send(query)
+        });
+
     app.route('/datos/barrio/:id')
         .get(async function (req, res) {
             let id_barrio = req.params.id
