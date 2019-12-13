@@ -81,45 +81,40 @@ module.exports = function (app: express.Application) {
         return query
     }
 
-  /*  const query_adm_usuarios = async function (estado: String, fecha_alta: Date, fecha_modificacion: Date, cant_tasaciones: number) {
-        //const query_adm_usuarios = async function () {
-        const entityManager = getManager()
-        let query = await entityManager.query(
-            "SELECT" +
-	        "email" +
-            ", 'ACTIV0'" +
-            ", '2019-06-01'" +
-            ", STR_TO_DATE('2019-06-01','%Y-%m-%d')" +
-            ", STR_TO_DATE('2019-12-02','%Y-%m-%d')" +
-            ", count(t.id)" +
-            " FROM usuario u" +
-	        " INNER JOIN tasacion t" +
-		    " ON u.id = t.id_usuario" +
-            "GROUP BY 1;"
-            , [estado, estado, estado ,estado]).catch(function (e) { console.log(e) })
-        return query
-    }*/
-
     const query_adm_usuarios = async function (estado: String, fecha_alta: Date, fecha_modificacion: Date, cant_tasaciones: number) {
         const entityManager = getManager()
         let query = await entityManager.query(
             "SELECT" +
             " email" +
-            ", 'ACTIVO' AS estado" +
-            ", STR_TO_DATE('2019-06-01','%Y-%m-%d') AS fecha_alta" +
-            ", STR_TO_DATE('2019-12-18','%Y-%m-%d') AS fecha_modificacion" +
+            ", u.estado " +
+            ", u.fecha_alta" +
+            ", u.fecha_modificacion" +
             ", count(t.id) AS cant_tasaciones" +
             " FROM usuario u" +
-	        " INNER JOIN tasacion t" +
-		    " ON u.id = t.id_usuario" +
-            " GROUP BY 1;"
-            , []).catch(function (e) { console.log(e) })
+	        " LEFT JOIN tasacion t" +
+            " ON u.id = t.id_usuario" +
+            " WHERE (u.estado = ? OR ? = '')" +
+            " AND u.fecha_alta > ?" +
+            " AND u.fecha_modificacion > ?" +
+            " GROUP BY 1, 2, 3, 4" +
+            " HAVING COUNT(t.id) >= ?" +
+            " ORDER BY 5 DESC;"
+            , [estado, estado, fecha_alta, fecha_modificacion, cant_tasaciones]).catch(function (e) { console.log(e) })
         return query
     }
 
-    app.route('/administracion/')
+    app.route('/administracion')
         .get(async function(req, res){
-            let query: any = await query_adm_usuarios('a', new Date(), new Date(), 8)
+            let param_tasaciones = req.param('cant_tasaciones')
+            if (param_tasaciones == undefined) {param_tasaciones = '0'}
+            let param_estado = req.param('estado')
+            if (param_estado == undefined) {param_estado = ''}
+            let param_fecha_alta = req.param('fecha_alta')
+            if (param_fecha_alta == undefined) {param_fecha_alta = '1900-01-01'}
+            let param_fecha_modificacion = req.param('fecha_modificacion')
+            if (param_fecha_modificacion == undefined) {param_fecha_modificacion = '1900-01-01'}
+            console.log(param_fecha_modificacion)
+            let query: any = await query_adm_usuarios(param_estado, param_fecha_alta, param_fecha_modificacion, param_tasaciones)
             res.send(query)
         });
 

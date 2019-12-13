@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Usuario {
@@ -29,10 +29,19 @@ export class Usuario {
     fecha_nacimiento: Date
 
     @Column()
+    estado: string
+
+    @Column()
     contrasenia: string
 
     @Column()
     domicilio: string
+
+    @CreateDateColumn()
+    fecha_alta: Date
+
+    @UpdateDateColumn()
+    fecha_modificacion: Date
 
     @Column({ nullable: true })
     token_recuperacion: string
