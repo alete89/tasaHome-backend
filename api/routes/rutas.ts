@@ -107,10 +107,11 @@ module.exports = function (app: express.Application) {
         const entityManager = getManager()
         let query = await entityManager.query(
             "SELECT" +
-            " descripcion " +
+            " UPPER(replace(dataset, '_', ' ')) AS descripcion"+
             " , fecha_actualizacion" +
+            " , dataset" +
             " FROM tasahome.configuracion" +
-            " WHERE vigente ORDER BY 2;"
+            " WHERE vigente ORDER BY 1;"
             , []).catch(function (e) { console.log(e) })
         return query
     }
@@ -118,6 +119,30 @@ module.exports = function (app: express.Application) {
     app.route('/configuracion')
         .get(async function(req, res){
             let query : any = await query_configuraciones()
+            res.send(query)
+    });
+
+    const query_actualizar_dataset = async function(param_dataset: String){
+        const entityManager = getManager()
+        let query = await entityManager.query(
+            "UPDATE configuracion SET vigente = false where dataset = ?; "
+            , [param_dataset]).catch(function (e) { console.log(e) })
+        return query
+    }
+
+    const query_nueva_informacion = async function(param_dataset: String){
+        const entityManager = getManager()
+        let query = await entityManager.query(
+            "INSERT INTO configuracion (descripcion, dataset) VALUES (?, ?);"
+            , [param_dataset, param_dataset]).catch(function (e) { console.log(e) })
+        return query
+    }
+
+    app.route('/configuracion/actualizar/:dataset')
+        .get(async function(req, res){
+            let dataset = req.params.dataset
+            await query_actualizar_dataset(dataset)
+            let query : any = await query_nueva_informacion(dataset)
             res.send(query)
     });
 

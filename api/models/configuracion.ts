@@ -13,6 +13,9 @@ export class Configuracion {
     @Column()
     descripcion: string
 
+    @Column()
+    dataset: string
+
     @CreateDateColumn()
     fecha_actualizacion: Date
 
