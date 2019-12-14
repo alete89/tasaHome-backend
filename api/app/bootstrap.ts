@@ -12,6 +12,7 @@ import { TipoOperacion } from "../models/tipo_operacion";
 import { Estado } from "../models/estado";
 import { Servicio } from "../models/servicio";
 import { Comuna } from "../models/comuna";
+import { Configuracion } from "../models/configuracion";
 import { SitioPublicacion } from "../models/sitio_publicacion";
 
 export class Bootstrap {
@@ -132,7 +133,9 @@ export class Bootstrap {
                 await this.crearServicios()
                 await this.crearSitiosPublicacion()
                 await this.crearTasaciones()
+                await this.crearConfiguraciones()
             }
+            // await this.crearConfiguraciones()
             conexion.close()
         }
         catch (e) {
@@ -5121,6 +5124,17 @@ export class Bootstrap {
         this.tasacion2.calcularValor()
         await getRepository(Tasacion).save(this.tasacion)
         await getRepository(Tasacion).save(this.tasacion2)
+    }
+
+    async crearConfiguraciones (){
+        let configuracion_escuelas = new Configuracion ({descripcion : "Escuelas"})
+        let configuracion_espacios_verdes = new Configuracion ({descripcion: "Espacios Verdes"})
+        let configuracion_comisarias = new Configuracion ({descripcion: "Comisarías"})
+        let configuracion_hospitales = new Configuracion ({descripcion: "Hospitales"})
+        let configuracion_valor_m2 = new Configuracion ({descripcion: "Valor Metro Cuadrado"})
+
+        await getRepository(Configuracion).save([configuracion_escuelas, configuracion_espacios_verdes, configuracion_comisarias, configuracion_hospitales, configuracion_valor_m2])
+
     }
 
     async crearUsuarios() {

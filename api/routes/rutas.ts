@@ -103,6 +103,24 @@ module.exports = function (app: express.Application) {
         return query
     }
 
+    const query_configuraciones = async function(){
+        const entityManager = getManager()
+        let query = await entityManager.query(
+            "SELECT" +
+            " descripcion " +
+            " , fecha_actualizacion" +
+            " FROM tasahome.configuracion" +
+            " WHERE vigente ORDER BY 2;"
+            , []).catch(function (e) { console.log(e) })
+        return query
+    }
+
+    app.route('/configuracion')
+        .get(async function(req, res){
+            let query : any = await query_configuraciones()
+            res.send(query)
+    });
+
     app.route('/administracion')
         .get(async function(req, res){
             let param_tasaciones = req.param('cant_tasaciones')
@@ -113,7 +131,6 @@ module.exports = function (app: express.Application) {
             if (param_fecha_alta == undefined) {param_fecha_alta = '1900-01-01'}
             let param_fecha_modificacion = req.param('fecha_modificacion')
             if (param_fecha_modificacion == undefined) {param_fecha_modificacion = '1900-01-01'}
-            console.log(param_fecha_modificacion)
             let query: any = await query_adm_usuarios(param_estado, param_fecha_alta, param_fecha_modificacion, param_tasaciones)
             res.send(query)
         });

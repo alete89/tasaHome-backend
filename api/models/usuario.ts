@@ -28,7 +28,7 @@ export class Usuario {
     @Column()
     fecha_nacimiento: Date
 
-    @Column()
+    @Column({default: 'Activo'})
     estado: string
 
     @Column()
