@@ -138,8 +138,6 @@ export class Bootstrap {
                 await this.crearConfiguraciones()
                 await this.crearValuaciones()
             }
-            // await this.crearConfiguraciones()
-            // await this.crearValuaciones()
             conexion.close()
         }
         catch (e) {

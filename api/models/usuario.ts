@@ -31,6 +31,9 @@ export class Usuario {
     @Column({default: 'Activo'})
     estado: string
 
+    @Column({default: false})
+    esAdmin: boolean
+
     @Column()
     contrasenia: string
 
