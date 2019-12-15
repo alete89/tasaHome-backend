@@ -10,12 +10,14 @@ import { Hospital } from "../models/hospital";
 import { TipoPropiedad } from "../models/tipo_propiedad";
 import { TipoOperacion } from "../models/tipo_operacion";
 import { Estado } from "../models/estado";
+import { Valuacion } from "../models/valuacion";
 import { Servicio } from "../models/servicio";
 import { Comuna } from "../models/comuna";
 import { Configuracion } from "../models/configuracion";
 import { SitioPublicacion } from "../models/sitio_publicacion";
 
 export class Bootstrap {
+
 
     usuarios: Usuario[] = []
     juan: Usuario
@@ -134,8 +136,10 @@ export class Bootstrap {
                 await this.crearSitiosPublicacion()
                 await this.crearTasaciones()
                 await this.crearConfiguraciones()
+                await this.crearValuaciones()
             }
             // await this.crearConfiguraciones()
+            // await this.crearValuaciones()
             conexion.close()
         }
         catch (e) {
@@ -5127,13 +5131,79 @@ export class Bootstrap {
     }
 
     async crearConfiguraciones (){
-        let configuracion_escuelas = new Configuracion ({descripcion : "Escuelas"})
-        let configuracion_espacios_verdes = new Configuracion ({descripcion: "Espacios Verdes"})
-        let configuracion_comisarias = new Configuracion ({descripcion: "Comisarías"})
-        let configuracion_hospitales = new Configuracion ({descripcion: "Hospitales"})
-        let configuracion_valor_m2 = new Configuracion ({descripcion: "Valor Metro Cuadrado"})
+        let configuracion_escuelas = new Configuracion ({descripcion : "Escuelas", dataset: "escuelas"})
+        let configuracion_espacios_verdes = new Configuracion ({descripcion: "Espacios Verdes", dataset: "espacios_verdes"})
+        let configuracion_comisarias = new Configuracion ({descripcion: "Comisarías", dataset: "comisarias"})
+        let configuracion_hospitales = new Configuracion ({descripcion: "Hospitales", dataset: "hospitales"})
+        let configuracion_valor_m2 = new Configuracion ({descripcion: "Valor Metro Cuadrado", dataset: "escuelas"})
 
         await getRepository(Configuracion).save([configuracion_escuelas, configuracion_espacios_verdes, configuracion_comisarias, configuracion_hospitales, configuracion_valor_m2])
+
+    }
+
+    async crearValuaciones () {
+        let valuacion_agronomia = new Valuacion ({barrio: this.agronomia, valor_m2: 2223})
+        let valuacion_almagro = new Valuacion ({barrio: this.almagro, valor_m2: 2462})
+        let valuacion_balvanera = new Valuacion ({barrio: this.balvanera, valor_m2: 2329})
+        let valuacion_barracas = new Valuacion ({barrio: this.barracas, valor_m2: 2263})
+        let valuacion_belgrano = new Valuacion ({barrio: this.belgrano, valor_m2: 3267})
+        let valuacion_boca = new Valuacion ({barrio: this.boca, valor_m2: 1782})
+        let valuacion_boedo = new Valuacion ({barrio: this.boedo, valor_m2: 2316})
+        let valuacion_caballito = new Valuacion ({barrio: this.caballito, valor_m2: 2844})
+        let valuacion_chacarita = new Valuacion ({barrio: this.chacarita, valor_m2: 2422})
+        let valuacion_coghlan = new Valuacion ({barrio: this.coghlan, valor_m2: 2716})
+        let valuacion_colegiales = new Valuacion ({barrio: this.colegiales, valor_m2: 2851})
+        let valuacion_constitucion = new Valuacion ({barrio: this.constitucion, valor_m2: 1967})
+        let valuacion_flores = new Valuacion ({barrio: this.flores, valor_m2: 2111})
+        let valuacion_floresta = new Valuacion ({barrio: this.floresta, valor_m2: 1995})
+        let valuacion_liniers = new Valuacion ({barrio: this.liniers, valor_m2: 1966})
+        let valuacion_mataderos = new Valuacion ({barrio: this.mataderos, valor_m2: 1851})
+        let valuacion_monserrat = new Valuacion ({barrio: this.monserrat, valor_m2: 2107})
+        let valuacion_monteCastro = new Valuacion ({barrio: this.monteCastro, valor_m2: 2021})
+        let valuacion_nuevaPompeya = new Valuacion ({barrio: this.nuevaPompeya, valor_m2: 1590})
+        let valuacion_nuniez = new Valuacion ({barrio: this.nuniez, valor_m2: 2541})
+        let valuacion_palermo = new Valuacion ({barrio: this.palermo, valor_m2: 3436})
+        let valuacion_parqueAvellaneda = new Valuacion ({barrio: this.parqueAvellaneda, valor_m2: 1784})
+        let valuacion_parqueChacabuco = new Valuacion ({barrio: this.parqueChacabuco, valor_m2: 2143})
+        let valuacion_parqueChas = new Valuacion ({barrio: this.parqueChas, valor_m2: 2456})
+        let valuacion_parquePatricios = new Valuacion ({barrio: this.parquePatricios, valor_m2: 1924})
+        let valuacion_paternal = new Valuacion ({barrio: this.paternal, valor_m2: 2065})
+        let valuacion_puertoMadero = new Valuacion ({barrio: this.puertoMadero, valor_m2: 5530})
+        let valuacion_recoleta = new Valuacion ({barrio: this.recoleta, valor_m2: 3194})
+        let valuacion_retiro = new Valuacion ({barrio: this.retiro, valor_m2: 3407})
+        let valuacion_saavedra = new Valuacion ({barrio: this.saavedra, valor_m2: 2414})
+        let valuacion_sanCristobal = new Valuacion ({barrio: this.sanCristobal, valor_m2: 2153})
+        let valuacion_sanNicolas = new Valuacion ({barrio: this.sanNicolas, valor_m2: 2360})
+        let valuacion_sanTelmo = new Valuacion ({barrio: this.sanTelmo, valor_m2: 2252})
+        let valuacion_velezSarsfield = new Valuacion ({barrio: this.velezSarsfield, valor_m2: 2069})
+        let valuacion_versalles = new Valuacion ({barrio: this.versalles, valor_m2: 1966})
+        let valuacion_villaCrespo = new Valuacion ({barrio: this.villaCrespo, valor_m2: 2560})
+        let valuacion_villaDelParque = new Valuacion ({barrio: this.villaDelParque, valor_m2: 2195})
+        let valuacion_villaDevoto = new Valuacion ({barrio: this.villaDevoto, valor_m2: 2481})
+        let valuacion_villaGralMitre = new Valuacion ({barrio: this.villaGralMitre, valor_m2: 2090})
+        let valuacion_villaLugano = new Valuacion ({barrio: this.villaLugano, valor_m2: 1573})
+        let valuacion_villaLuro = new Valuacion ({barrio: this.villaLuro, valor_m2: 2081})
+        let valuacion_villaOrtuzar = new Valuacion ({barrio: this.villaOrtuzar, valor_m2: 2583})
+        let valuacion_villaPueyrredon = new Valuacion ({barrio: this.villaPueyrredon, valor_m2: 2335})
+        let valuacion_villaReal = new Valuacion ({barrio: this.villaReal, valor_m2: 2093})
+        let valuacion_villaRiachuelo = new Valuacion ({barrio: this.villaRiachuelo, valor_m2: 1730})
+        let valuacion_villaSantaRita = new Valuacion ({barrio: this.villaSantaRita, valor_m2: 2118})
+        let valuacion_villaSoldati = new Valuacion ({barrio: this.villaSoldati, valor_m2: 1355})
+        let valuacion_villaUrquiza = new Valuacion ({barrio: this.villaUrquiza, valor_m2: 2541})
+
+        await getRepository(Valuacion).save([
+            valuacion_agronomia, valuacion_almagro, valuacion_balvanera, valuacion_barracas, valuacion_belgrano, 
+            valuacion_boca, valuacion_boedo, valuacion_caballito, valuacion_chacarita, valuacion_coghlan, 
+            valuacion_colegiales, valuacion_constitucion, valuacion_flores, valuacion_floresta, valuacion_liniers, 
+            valuacion_mataderos, valuacion_monserrat, valuacion_monteCastro, valuacion_nuevaPompeya, 
+            valuacion_nuniez, valuacion_palermo, valuacion_parqueAvellaneda, valuacion_parqueChacabuco, 
+            valuacion_parqueChas, valuacion_parquePatricios, valuacion_paternal, valuacion_puertoMadero, 
+            valuacion_recoleta, valuacion_retiro, valuacion_saavedra, valuacion_sanCristobal, valuacion_sanNicolas, 
+            valuacion_sanTelmo, valuacion_velezSarsfield, valuacion_versalles, valuacion_villaCrespo, 
+            valuacion_villaDelParque, valuacion_villaDevoto, valuacion_villaGralMitre, valuacion_villaLugano, 
+            valuacion_villaLuro, valuacion_villaOrtuzar, valuacion_villaPueyrredon, valuacion_villaReal, 
+            valuacion_villaRiachuelo, valuacion_villaSantaRita, valuacion_villaSoldati, valuacion_villaUrquiza, 
+        ])
 
     }
 
