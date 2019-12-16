@@ -5044,8 +5044,8 @@ export class Bootstrap {
     }
 
     async crearTiposDeOperacion() {
-        this.venta = new TipoOperacion({ descripcion: "Venta", precioBase: 1900 })
-        this.alquiler = new TipoOperacion({ descripcion: "Alquiler", precioBase: 272 })
+        this.venta = new TipoOperacion({ descripcion: "Venta", coeficiente: 1 })
+        this.alquiler = new TipoOperacion({ descripcion: "Alquiler", coeficiente: 0.111 })
         await getRepository(TipoOperacion).save([this.venta, this.alquiler])
     }
 

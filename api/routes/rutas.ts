@@ -11,6 +11,7 @@ import { RepoUsuarios } from '../repos/repoUsuarios';
 import { Estado } from '../models/estado';
 import { Servicio } from '../models/servicio';
 import { EmailService } from '../servicios/emailService';
+import { ValuacionService } from "../servicios/valuacionService";
 import { SitioPublicacion } from '../models/sitio_publicacion';
 import { Escuela } from '../models/escuela';
 import { Hospital } from '../models/hospital';
@@ -223,10 +224,13 @@ module.exports = function (app: express.Application) {
     app.route('/tasar_propiedad')
         .put(async function (req, res) {
             let tasacion = Tasacion.fromJson(req.body);
+            let valServicio = new ValuacionService()
             tasacion.tipoDePropiedad = await getRepository(TipoPropiedad).findOneOrFail(req.body.tipoDePropiedad.id)
             tasacion.tipoDeOperacion = await getRepository(TipoOperacion).findOneOrFail(req.body.tipoDeOperacion.id)
             tasacion.estado = await getRepository(Estado).findOneOrFail(req.body.estado.id)
-            let valor = tasacion.calcularValor()
+            let valorM2 = await valServicio.getValorM2(tasacion.barrio)
+            console.log(valorM2)
+            let valor = tasacion.calcularValor(valorM2)
             // tasacion.validar()
             res.send(JSON.stringify(valor))
         });

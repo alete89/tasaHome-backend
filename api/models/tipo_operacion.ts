@@ -13,6 +13,6 @@ export class TipoOperacion {
     @Column()
     descripcion: string
 
-    @Column()
-    precioBase: number
+    @Column("decimal", { nullable: true, precision: 20, scale: 10 })
+    coeficiente: number
 }
