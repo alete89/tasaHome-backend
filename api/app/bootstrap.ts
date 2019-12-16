@@ -5122,8 +5122,8 @@ export class Bootstrap {
             servicios: [this.electricidad],
         })
 
-        this.tasacion.calcularValor()
-        this.tasacion2.calcularValor()
+        this.tasacion.calcularValor(2541)
+        this.tasacion2.calcularValor(3194)
         await getRepository(Tasacion).save(this.tasacion)
         await getRepository(Tasacion).save(this.tasacion2)
     }
