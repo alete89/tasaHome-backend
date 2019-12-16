@@ -5133,7 +5133,7 @@ export class Bootstrap {
         let configuracion_espacios_verdes = new Configuracion ({descripcion: "Espacios Verdes", dataset: "espacios_verdes"})
         let configuracion_comisarias = new Configuracion ({descripcion: "Comisarías", dataset: "comisarias"})
         let configuracion_hospitales = new Configuracion ({descripcion: "Hospitales", dataset: "hospitales"})
-        let configuracion_valor_m2 = new Configuracion ({descripcion: "Valor Metro Cuadrado", dataset: "escuelas"})
+        let configuracion_valor_m2 = new Configuracion ({descripcion: "Valor Metro Cuadrado", dataset: "valor_metro_cuadrado"})
 
         await getRepository(Configuracion).save([configuracion_escuelas, configuracion_espacios_verdes, configuracion_comisarias, configuracion_hospitales, configuracion_valor_m2])
 
