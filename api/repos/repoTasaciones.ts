@@ -89,7 +89,35 @@ export class RepoTasaciones extends Repository<Tasacion> {
         return tasacion
     }
 
-    async tasacionesSimilares(id_logueado: number, body: any) {
+   async tasacionesSimilares(id_logueado: number, body: any) {
+        const condiciones: any[] = [
+          {
+            usuario: { id: Not(id_logueado) },
+            barrio: { id: In(body.ids_barrios) },
+          },
+          {
+            usuario: { id: Not(id_logueado) },
+            ambientes: MoreThanOrEqual(body.ambientes_minimos),
+          },
+          {
+            usuario: { id: Not(id_logueado) },
+            tipoDePropiedad: { id: body.id_tipo_propiedad },
+          },
+          {
+            usuario: { id: Not(id_logueado) },
+            tipoDeOperacion: { id: body.id_tipo_operacion },
+          },
+          {
+            usuario: { id: Not(id_logueado) },
+            superficie: Between(body.superficie_minima, 100000),
+          },
+        ]
+        if (body.fecha_desde) {
+          condiciones.push({
+            usuario: { id: Not(id_logueado) },
+            fecha: this.MoreThanDate(new Date(body.fecha_desde)),
+          })
+        }
         try {
             let tasaciones = await this.find({
                 join: {
@@ -101,14 +129,7 @@ export class RepoTasaciones extends Repository<Tasacion> {
                     },
                 },
                 where:
-                    [
-                        { usuario: { id: Not(id_logueado) }, barrio: { id: In(body.ids_barrios) } },
-                        { usuario: { id: Not(id_logueado) }, ambientes: MoreThanOrEqual(body.ambientes_minimos) },
-                        { usuario: { id: Not(id_logueado) }, tipoDePropiedad: { id: body.id_tipo_propiedad } },
-                        { usuario: { id: Not(id_logueado) }, tipoDeOperacion: { id: body.id_tipo_operacion } },
-                        { usuario: { id: Not(id_logueado) }, superficie: Between(body.superficie_minima, 100000) },
-                        { usuario: { id: Not(id_logueado) }, fecha: this.MoreThanDate(new Date(body.fecha_desde)) }
-                    ]
+                    condiciones
             })
             console.log("Tasaciones: ", tasaciones)
             return tasaciones
