@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, JoinColumn, CreateDateColumn } from "typeorm";
 import { Barrio } from "./barrio";
 
 @Entity()
@@ -20,10 +20,10 @@ export class Hospital {
     @Column()
     descripcion: string
 
-    @Column({ nullable: true })
+    @CreateDateColumn()
     fecha_actualizacion: Date
 
-    @Column({ nullable: true })
+    @Column({ default: true, nullable: true })
     vigente: boolean
 
     @ManyToOne(type => Barrio)
