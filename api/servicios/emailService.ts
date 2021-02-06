@@ -4,7 +4,9 @@ export class EmailService {
 
     nodeMailer = require('nodemailer')
 
-    emailTasaHome: string = 'tasacioneshome@gmail.com'
+    emailTasaHome: string = process.env.EMAIL_USER || ""
+
+    pass: string = process.env.EMAIL_PASS || ""
 
     transporter: any
 
@@ -17,8 +19,8 @@ export class EmailService {
             port: 465,
             secure: true, // use SSL
             auth: {
-                user: 'tasacioneshome@gmail.com',
-                pass: 'tasahome'
+                user: this.emailTasaHome,
+                pass: this.pass
             }
         }
         this.transporter = this.nodeMailer.createTransport(this.smtpConfig)
@@ -29,7 +31,7 @@ export class EmailService {
 
         let mailOptions = {
             
-            from: '"TasaHome" <tasacioneshome@gmail.com>',
+            from: `"TasaHome" <${this.emailTasaHome}>`,
             to: email_receptor,
             subject: 'Nuevo mensaje de ' + emisor.nombre + " " + emisor.apellido,
             text: mensaje
@@ -48,7 +50,7 @@ export class EmailService {
 
         let mailOptions = {
             
-            from: '"TasaHome" <tasacioneshome@gmail.com>',
+            from: `"TasaHome" <${this.emailTasaHome}>`,
             to: email_receptor,
             subject: 'Nueva contraseña solicitada',
             text: 'Hace click acá: \n' + link

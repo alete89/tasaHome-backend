@@ -2,6 +2,7 @@ import express = require('express');
 import "reflect-metadata";
 import { Bootstrap } from './bootstrap';
 import { createConnection } from "typeorm";
+require('dotenv').config()
 
 // Create a new express application instance
 const app: express.Application = express();
