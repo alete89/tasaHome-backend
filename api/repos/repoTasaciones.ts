@@ -1,4 +1,4 @@
-import { Between, EntityRepository, In, MoreThanOrEqual, Not, Repository, MoreThan, LessThan } from "typeorm";
+import { Between, Brackets, EntityRepository, getConnection, In, LessThan, MoreThan, MoreThanOrEqual, Not, Repository } from "typeorm";
 import { Tasacion } from "../models/tasacion";
 declare var require: any
 
@@ -17,7 +17,7 @@ export class RepoTasaciones extends Repository<Tasacion> {
         }
     }
 
-    async searchById(id_tasacion: number) {
+    async searchById(id_tasacion: string) {
         // return await this.createQueryBuilder("tasacion").leftJoinAndSelect("tasacion.servicios", "servicio")
         //     .where("tasacion.id = :unId", { unId: id_tasacion }).getOne()
         return await this.findOneOrFail({
@@ -52,7 +52,7 @@ export class RepoTasaciones extends Repository<Tasacion> {
         }
     }
 
-    async tasacionesAnteriores(id_usuario: number) {
+    async tasacionesAnteriores(id_usuario: string) {
         let tasacion = await this.find({
             join: {
                 alias: "tasacion",
@@ -89,35 +89,23 @@ export class RepoTasaciones extends Repository<Tasacion> {
         return tasacion
     }
 
-   async tasacionesSimilares(id_logueado: number, body: any) {
-        const condiciones: any[] = [
-          {
+    async tasacionesSimilares(id_logueado: string, body: any) {
+
+        const { ids_barrios, ambientes_minimos, id_tipo_propiedad, id_tipo_operacion, superficie_minima, fecha_desde } = body
+
+        console.log("body", body)
+
+        const condiciones: any =
+        {
             usuario: { id: Not(id_logueado) },
-            barrio: { id: In(body.ids_barrios) },
-          },
-          {
-            usuario: { id: Not(id_logueado) },
-            ambientes: MoreThanOrEqual(body.ambientes_minimos),
-          },
-          {
-            usuario: { id: Not(id_logueado) },
-            tipoDePropiedad: { id: body.id_tipo_propiedad },
-          },
-          {
-            usuario: { id: Not(id_logueado) },
-            tipoDeOperacion: { id: body.id_tipo_operacion },
-          },
-          {
-            usuario: { id: Not(id_logueado) },
-            superficie: Between(body.superficie_minima, 100000),
-          },
-        ]
-        if (body.fecha_desde) {
-          condiciones.push({
-            usuario: { id: Not(id_logueado) },
-            fecha: this.MoreThanDate(new Date(body.fecha_desde)),
-          })
+            ...((ids_barrios && ids_barrios.length > 0) && { barrio: { id: In(ids_barrios) } }),
+            ...(ambientes_minimos && { ambientes: MoreThanOrEqual(ambientes_minimos) }),
+            ...((id_tipo_propiedad) && { tipoDePropiedad: { id: id_tipo_propiedad } }),
+            ...((id_tipo_operacion) && { tipoDeOperacion: { id: id_tipo_operacion } }),
+            ...(superficie_minima && { superficie: Between(superficie_minima, 10000) }),
+            ...(fecha_desde && { fecha: this.MoreThanDate(new Date(fecha_desde)) }),
         }
+
         try {
             let tasaciones = await this.find({
                 join: {
@@ -131,12 +119,13 @@ export class RepoTasaciones extends Repository<Tasacion> {
                 where:
                     condiciones
             })
-            console.log("Tasaciones: ", tasaciones)
+            // console.log("Tasaciones: ", tasaciones)
             return tasaciones
         } catch (error) {
             return ("se produjo un error")
         }
 
     }
+
 
 }

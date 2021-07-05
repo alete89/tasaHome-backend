@@ -28,7 +28,7 @@ export class RepoUsuarios extends Repository<Usuario> {
         //TODO
     }
 
-    async searchById(id: number) {
+    async searchById(id: string) {
         return await this.findOneOrFail(id)
     }
 

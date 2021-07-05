@@ -28,10 +28,10 @@ export class Usuario {
     @Column()
     fecha_nacimiento: Date
 
-    @Column({default: 'Activo'})
+    @Column({ default: 'Activo' })
     estado: string
 
-    @Column({default: false})
+    @Column({ default: false })
     esAdmin: boolean
 
     @Column()
@@ -50,8 +50,42 @@ export class Usuario {
     token_recuperacion: string
 
     validar() {
-        if (!this.nombre || !this.apellido || !this.email || !this.genero || !this.contrasenia) {
-            throw "Usuario inválido"
+        if (!this.nombre || !this.apellido || !this.email || !this.genero || !this.contrasenia || !this.edad) {
+            throw "Faltan campos requeridos"
+        }
+        this.validarNombreYApellido()
+        this.validarContrasenia()
+        this.validarEdad()
+
+    }
+
+    validarNombreYApellido() {
+        this.validarSoloLetras(this.nombre)
+        this.validarSoloLetras(this.apellido)
+    }
+
+    validarSoloLetras(texto: String) {
+        let letters = /^[A-Za-z]+$/
+        if (!texto.match(letters)) {
+            throw "Nombre y apellido deben contener solamente letras"
+        }
+    }
+
+    validarContrasenia() {
+        if (this.contrasenia.length < 8) {
+            throw "La contraseña debe tener al menos 8 carácteres"
+        }
+        if (this.contrasenia.length > 72) {
+            throw "La contraseña no puede tener más de 72 carácteres"
+        }
+    }
+
+    validarEdad() {
+        if (this.edad < 18) {
+            throw "Debe ser tener más de 18 años"
+        }
+        if (this.edad > 100) {
+            throw "La edad debe ser menor a 100"
         }
     }
 

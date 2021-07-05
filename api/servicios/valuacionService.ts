@@ -5,7 +5,7 @@ export class ValuacionService {
     constructor() {
     }
 
-    async getValorM2(p_barrio: Barrio){
+    async getValorM2(p_barrio: Barrio) {
         let nombre_barrio = p_barrio.descripcion
         let barrio = await getRepository(Barrio).findOneOrFail({ descripcion: nombre_barrio })
         const entityManager = getManager()
@@ -14,7 +14,7 @@ export class ValuacionService {
             " FROM valuacion" +
             " WHERE id_barrio = ?" +
             " AND vigente;"
-            , [barrio.id]).catch(function (e) { console.log(e) })
+            , [barrio.id]).catch(function (e) { console.log(e); throw e; })
         // console.log("fin query")
         return query[0].valor_m2
     }

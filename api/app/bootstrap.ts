@@ -5062,7 +5062,7 @@ export class Bootstrap {
     async crearSitiosPublicacion() {
         this.zonaProp = new SitioPublicacion({
             descripcion: "ZonaProp",
-            logo_url: "http://www.mapaprop.com/blog/wp-content/uploads/2017/05/partners-zonaprop-512.png",
+            logo_url: "https://public.flourish.studio/uploads/17639d45-2759-4d2d-b038-a559501f8e95.png",
             url_publicar: "https://www.zonaprop.com.ar/landingFreemium.bum"
         })
         this.argenProp = new SitioPublicacion({
@@ -5077,7 +5077,7 @@ export class Bootstrap {
         }),
             this.icasas = new SitioPublicacion({
                 descripcion: "Icasas",
-                logo_url: "http://www.mapaprop.com/blog/wp-content/uploads/2015/07/logo-icasas.png",
+                logo_url: "https://script.resemmedia.com/images/images/logo-icasas_v4.png",
                 url_publicar: "https://www.icasas.com.ar/publicar/particular"
             })
         await getRepository(SitioPublicacion).save([this.zonaProp, this.argenProp, this.olx, this.icasas])
@@ -5207,11 +5207,11 @@ export class Bootstrap {
 
     async crearUsuarios() {
         this.juan = new Usuario({
-            nombre: "Juan", apellido: "Perez", edad: 20, email: "juanp@supermail.com", genero: "Hombre", contrasenia: "123",
+            nombre: "Juan", apellido: "Perez", edad: 20, email: "elantra87@itgracevvx.com", genero: "Hombre", contrasenia: "123",
             domicilio: "Laprida 4545", fecha_nacimiento: new Date()
         })
         this.celeste = new Usuario({
-            nombre: "Celeste", apellido: "Cid", edad: 45, email: "celes@supermail.com", genero: "Mujer", contrasenia: "cel",
+            nombre: "Celeste", apellido: "Cid", edad: 45, email: "fafecar930@advew.com", genero: "Mujer", contrasenia: "cel",
             domicilio: "Aguero 3000", fecha_nacimiento: new Date()
         })
         this.usuarios = [this.juan, this.celeste]

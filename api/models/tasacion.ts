@@ -67,10 +67,40 @@ export class Tasacion {
     @JoinColumn({ name: "id_barrio" })
     barrio: Barrio
 
-    validar() {
-        if (!this.descripcion || !this.ambientes || !this.superficie || !this.fecha || !this.valor || !this.estado || !this.tipoDeOperacion || !this.tipoDePropiedad || !this.usuario) {
-            throw "Tasacion inválida"
+    validarGuardarTasacion() {
+        this.validarCamposRequeridos()
+        this.validarAmbientes()
+        this.validarSuperficie()
+        if (!this.fecha || !this.valor || !this.usuario) {
+            throw "Tasación inválida"
         }
+    }
+
+    validarTasarPropiedad() {
+        this.validarCamposRequeridos()
+        this.validarAmbientes()
+        this.validarSuperficie()
+    }
+
+    validarCamposRequeridos() {
+        if (!this.ambientes || !this.superficie || !this.estado || !this.tipoDeOperacion || !this.tipoDePropiedad) {
+            throw "Faltan campos requeridos"
+        }
+    }
+
+    validarAmbientes() {
+
+        if (this.ambientes < 1 || this.ambientes > 15) {
+            throw "Los ambientes deben ser un valor entre 1 y 15"
+        }
+
+    }
+
+    validarSuperficie() {
+        if (this.superficie < 15 || this.superficie > 2000) {
+            throw "La superficie debe ser un valor entre 15 y 2000"
+        }
+
     }
 
 
@@ -79,15 +109,15 @@ export class Tasacion {
         let tiene_agua = servicios_incluidos.includes(4)
         let tiene_electricidad = servicios_incluidos.includes(2)
         let coef_agua = 1
-        if (!tiene_agua) {coef_agua = 0.25} 
+        if (!tiene_agua) { coef_agua = 0.25 }
         let coef_elec = 1
-        if (!tiene_electricidad) {coef_elec = 0.25} 
+        if (!tiene_electricidad) { coef_elec = 0.25 }
         console.log(tiene_agua)
         console.log(tiene_electricidad)
         console.log(servicios_incluidos)
         this.valor = this.superficie *
             this.tipoDeOperacion.coeficiente *
-            valorM2 * 
+            valorM2 *
             coef_agua * coef_elec * // servicios_basicos
             this.tipoDePropiedad.coeficiente *
             ((this.ambientes * 3) / 100 + 1) *

@@ -70,7 +70,7 @@ module.exports = function (app: express.Application) {
             }
         });
 
-    const query_datos_por_barrio = async function (id_barrio: number) {
+    const query_datos_por_barrio = async function (id_barrio: string) {
         const entityManager = getManager()
         let query = await entityManager.query(
             "SELECT" +
@@ -78,11 +78,11 @@ module.exports = function (app: express.Application) {
             "(SELECT count(*) FROM tasaHome.hospital as hospital WHERE hospital.id_barrio = ?) as hospitales," +
             "(SELECT count(*) FROM tasaHome.comisaria as comisaria WHERE comisaria.id_barrio = ?) as comisarias," +
             "(SELECT count(*) FROM tasaHome.espacio_verde as espacio WHERE espacio.id_barrio = ?) as espacios_verdes;"
-            , [id_barrio, id_barrio, id_barrio, id_barrio]).catch(function (e) { console.log(e) })
+            , [id_barrio, id_barrio, id_barrio, id_barrio]).catch(function (e) { console.log(e); throw e })
         return query
     }
 
-    const query_adm_usuarios = async function (estado: String, fecha_alta: Date, fecha_modificacion: Date, cant_tasaciones: number) {
+    const query_adm_usuarios = async function (estado: String, fecha_alta: string, fecha_modificacion: string, cant_tasaciones: string) {
         const entityManager = getManager()
         let query = await entityManager.query(
             "SELECT" +
@@ -92,7 +92,7 @@ module.exports = function (app: express.Application) {
             ", u.fecha_modificacion" +
             ", count(t.id) AS cant_tasaciones" +
             " FROM usuario u" +
-	        " LEFT JOIN tasacion t" +
+            " LEFT JOIN tasacion t" +
             " ON u.id = t.id_usuario" +
             " WHERE (u.estado = ? OR ? = '')" +
             " AND u.fecha_alta > ?" +
@@ -100,63 +100,63 @@ module.exports = function (app: express.Application) {
             " GROUP BY 1, 2, 3, 4" +
             " HAVING COUNT(t.id) >= ?" +
             " ORDER BY 5 DESC;"
-            , [estado, estado, fecha_alta, fecha_modificacion, cant_tasaciones]).catch(function (e) { console.log(e) })
+            , [estado, estado, fecha_alta, fecha_modificacion, cant_tasaciones]).catch(function (e) { console.log(e); throw e })
         return query
     }
 
-    const query_configuraciones = async function(){
+    const query_configuraciones = async function () {
         const entityManager = getManager()
         let query = await entityManager.query(
             "SELECT" +
-            " UPPER(replace(dataset, '_', ' ')) AS descripcion"+
+            " UPPER(replace(dataset, '_', ' ')) AS descripcion" +
             " , fecha_actualizacion" +
             " , dataset" +
             " FROM tasahome.configuracion" +
             " WHERE vigente ORDER BY 1;"
-            , []).catch(function (e) { console.log(e) })
+            , []).catch(function (e) { console.log(e); throw e })
         return query
     }
 
     app.route('/configuracion')
-        .get(async function(req, res){
-            let query : any = await query_configuraciones()
+        .get(async function (req, res) {
+            let query: any = await query_configuraciones()
             res.send(query)
-    });
+        });
 
-    const query_actualizar_dataset = async function(param_dataset: String){
+    const query_actualizar_dataset = async function (param_dataset: String) {
         const entityManager = getManager()
         let query = await entityManager.query(
             "CALL actualiza_" + param_dataset + "();"
-            , [param_dataset]).catch(function (e) { console.log(e) })
+            , [param_dataset]).catch(function (e) { console.log(e); throw e })
         return query
     }
 
-    const query_nueva_informacion = async function(param_dataset: String){
+    const query_nueva_informacion = async function (param_dataset: String) {
         const entityManager = getManager()
         let query = await entityManager.query(
             "INSERT INTO configuracion (descripcion, dataset) VALUES (?, ?);"
-            , [param_dataset, param_dataset]).catch(function (e) { console.log(e) })
+            , [param_dataset, param_dataset]).catch(function (e) { console.log(e); throw e })
         return query
     }
 
     app.route('/configuracion/actualizar/:dataset')
-        .get(async function(req, res){
+        .get(async function (req, res) {
             let dataset = req.params.dataset
             // await query_actualizar_dataset(dataset)
-            let query : any = await query_actualizar_dataset(dataset)
+            let query: any = await query_actualizar_dataset(dataset)
             res.send(query)
-    });
+        });
 
     app.route('/administracion')
-        .get(async function(req, res){
+        .get(async function (req, res) {
             let param_tasaciones = req.param('cant_tasaciones')
-            if (param_tasaciones == undefined) {param_tasaciones = '0'}
+            if (param_tasaciones == undefined) { param_tasaciones = '0' }
             let param_estado = req.param('estado')
-            if (param_estado == undefined) {param_estado = ''}
+            if (param_estado == undefined) { param_estado = '' }
             let param_fecha_alta = req.param('fecha_alta')
-            if (param_fecha_alta == undefined) {param_fecha_alta = '1900-01-01'}
+            if (param_fecha_alta == undefined) { param_fecha_alta = '1900-01-01' }
             let param_fecha_modificacion = req.param('fecha_modificacion')
-            if (param_fecha_modificacion == undefined) {param_fecha_modificacion = '1900-01-01'}
+            if (param_fecha_modificacion == undefined) { param_fecha_modificacion = '1900-01-01' }
             let query: any = await query_adm_usuarios(param_estado, param_fecha_alta, param_fecha_modificacion, param_tasaciones)
             res.send(query)
         });
@@ -172,7 +172,7 @@ module.exports = function (app: express.Application) {
         .put(async function (req, res) {
             let nombre_barrio = req.body.barrio
             let barrio = await getRepository(Barrio).findOneOrFail({ descripcion: nombre_barrio })
-            let query: any = await query_datos_por_barrio(barrio.id)
+            let query: any = await query_datos_por_barrio(barrio.id.toString())
             res.send(query[0])
         });
 
@@ -187,7 +187,7 @@ module.exports = function (app: express.Application) {
                 "(SELECT count(*) FROM tasaHome.hospital as hospital WHERE hospital.id_barrio in (select id from barrio where id_comuna = ?)) as hospitales," +
                 "(SELECT count(*) FROM tasaHome.comisaria as comisaria WHERE comisaria.id_barrio in (select id from barrio where id_comuna = ?)) as comisarias," +
                 "(SELECT count(*) FROM tasaHome.espacio_verde as espacio WHERE espacio.id_barrio in (select id from barrio where id_comuna = ?)) as espacios_verdes;"
-                , [id_comuna, id_comuna, id_comuna, id_comuna]).catch(function (e) { console.log(e) })
+                , [id_comuna, id_comuna, id_comuna, id_comuna]).catch(function (e) { console.log(e); throw e })
             res.send(query[0])
         });
 
@@ -223,16 +223,23 @@ module.exports = function (app: express.Application) {
 
     app.route('/tasar_propiedad')
         .put(async function (req, res) {
-            let tasacion = Tasacion.fromJson(req.body);
-            let valServicio = new ValuacionService()
-            tasacion.tipoDePropiedad = await getRepository(TipoPropiedad).findOneOrFail(req.body.tipoDePropiedad.id)
-            tasacion.tipoDeOperacion = await getRepository(TipoOperacion).findOneOrFail(req.body.tipoDeOperacion.id)
-            tasacion.estado = await getRepository(Estado).findOneOrFail(req.body.estado.id)
-            let valorM2 = await valServicio.getValorM2(tasacion.barrio)
-            console.log(valorM2)
-            let valor = tasacion.calcularValor(valorM2)
-            // tasacion.validar()
-            res.send(JSON.stringify(valor))
+            try {
+                let tasacion = Tasacion.fromJson(req.body);
+                let valServicio = new ValuacionService()
+                tasacion.tipoDePropiedad = await getRepository(TipoPropiedad).findOneOrFail(req.body.tipoDePropiedad.id)
+                tasacion.tipoDeOperacion = await getRepository(TipoOperacion).findOneOrFail(req.body.tipoDeOperacion.id)
+                tasacion.estado = await getRepository(Estado).findOneOrFail(req.body.estado.id)
+                tasacion.validarTasarPropiedad()
+                let valorM2 = await valServicio.getValorM2(tasacion.barrio)
+                console.log(valorM2)
+                let valor = tasacion.calcularValor(valorM2)
+                // tasacion.validar()
+                res.send(JSON.stringify(valor))
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                });
+            }
         });
 
     app.route('/guardar_tasacion/:id')
@@ -242,13 +249,13 @@ module.exports = function (app: express.Application) {
                 let tasacion: Tasacion = Tasacion.fromJson(req.body);
                 tasacion.fecha = new Date()
                 tasacion.descripcion = tasacion.direccion
-                tasacion.usuario = id_usuario
+                tasacion.usuario = await getCustomRepository(RepoUsuarios).searchById(id_usuario)
+                tasacion.validarGuardarTasacion()
                 console.log(req.body)
                 if (!req.body.barrio.id) {
                     let barrio = await getRepository(Barrio).findOneOrFail({ descripcion: req.body.barrio.descripcion })
                     tasacion.barrio = barrio
                 }
-                tasacion.validar()
                 if (req.body.id) {
                     if (req.body.id_anterior) {
                         tasacion.id_anterior = req.body.id_anterior
@@ -450,9 +457,10 @@ module.exports = function (app: express.Application) {
                 let email_receptor = req.body.email_receptor
                 let mensaje = req.body.mensaje
                 let email_service = new EmailService()
-                email_service.enviarEmail(usuario_emisor, email_receptor, mensaje)
+                email_service.enviarMensaje(usuario_emisor, email_receptor, mensaje)
                 res.send("OK")
             } catch (error) {
+                console.error(error)
                 res.status(400).send({
                     message: error
                 })
