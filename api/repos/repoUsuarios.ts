@@ -5,11 +5,7 @@ import { Usuario } from "../models/usuario";
 export class RepoUsuarios extends Repository<Usuario> {
 
     async todosLosUsuarios() {
-        try {
-            return await this.find()
-        } catch (e) {
-            console.log(e)
-        }
+        return await this.find()
     }
 
     async login(posible_email: string, posible_password: string) {

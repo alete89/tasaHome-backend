@@ -28,13 +28,13 @@ module.exports = function (app: express.Application) {
         next();
     });
 
-    app.route('/registrar_usuario')
-        .get(async function (req, res) {
-            let usuario = Usuario.fromJson(req.body);
-            // usuario.validar()
-            await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
-            res.send("OK")
-        });
+    // app.route('/registrar_usuario')
+    //     .get(async function (req, res) {
+    //         let usuario = Usuario.fromJson(req.body);
+    //         // usuario.validar()
+    //         await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
+    //         res.sendStatus(200)
+    //     });
 
     app.route('/usuarios')
         .get(async function (req, res) {
@@ -43,7 +43,13 @@ module.exports = function (app: express.Application) {
 
     app.route('/usuarios/:id')
         .get(async function (req, res) {
-            res.send(await getCustomRepository(RepoUsuarios).searchById(req.params.id));
+            try {
+                res.send(await getCustomRepository(RepoUsuarios).searchById(req.params.id));
+            } catch (error) {
+                res.status(404).send({
+                    message: error
+                });
+            }
         });
 
     app.route('/usuarios/token')
@@ -127,7 +133,7 @@ module.exports = function (app: express.Application) {
         const entityManager = getManager()
         let query = await entityManager.query(
             "CALL actualiza_" + param_dataset + "();"
-            , [param_dataset]).catch(function (e) { console.log(e); throw e })
+            , [param_dataset])
         return query
     }
 
@@ -141,41 +147,64 @@ module.exports = function (app: express.Application) {
 
     app.route('/configuracion/actualizar/:dataset')
         .get(async function (req, res) {
-            let dataset = req.params.dataset
-            // await query_actualizar_dataset(dataset)
-            let query: any = await query_actualizar_dataset(dataset)
-            res.send(query)
+            try {
+                let dataset = req.params.dataset
+                // await query_actualizar_dataset(dataset)
+                let query: any = await query_actualizar_dataset(dataset)
+                res.send(query)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                });
+            }
         });
 
     app.route('/administracion')
         .get(async function (req, res) {
-            let param_tasaciones = req.param('cant_tasaciones')
-            if (param_tasaciones == undefined) { param_tasaciones = '0' }
-            let param_estado = req.param('estado')
-            if (param_estado == undefined) { param_estado = '' }
-            let param_fecha_alta = req.param('fecha_alta')
-            if (param_fecha_alta == undefined) { param_fecha_alta = '1900-01-01' }
-            let param_fecha_modificacion = req.param('fecha_modificacion')
-            if (param_fecha_modificacion == undefined) { param_fecha_modificacion = '1900-01-01' }
-            let query: any = await query_adm_usuarios(param_estado, param_fecha_alta, param_fecha_modificacion, param_tasaciones)
-            res.send(query)
+            try {
+                let param_tasaciones = req.param('cant_tasaciones')
+                if (param_tasaciones == undefined) { param_tasaciones = '0' }
+                let param_estado = req.param('estado')
+                if (param_estado == undefined) { param_estado = '' }
+                let param_fecha_alta = req.param('fecha_alta')
+                if (param_fecha_alta == undefined) { param_fecha_alta = '1900-01-01' }
+                let param_fecha_modificacion = req.param('fecha_modificacion')
+                if (param_fecha_modificacion == undefined) { param_fecha_modificacion = '1900-01-01' }
+                let query: any = await query_adm_usuarios(param_estado, param_fecha_alta, param_fecha_modificacion, param_tasaciones)
+                res.send(query)
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                });
+            }
         });
 
     app.route('/datos/barrio/:id')
         .get(async function (req, res) {
-            let id_barrio = req.params.id
-            let query: any = await query_datos_por_barrio(id_barrio)
-            res.send(query[0])
+            try {
+                let id_barrio = req.params.id
+                let query: any = await query_datos_por_barrio(id_barrio)
+                res.send(query[0])
+            } catch (error) {
+                res.status(400).send({
+                    message: error
+                });
+            }
         });
 
     app.route('/datos/barrio-nombre/')
         .put(async function (req, res) {
-            let nombre_barrio = req.body.barrio
-            let barrio = await getRepository(Barrio).findOneOrFail({ descripcion: nombre_barrio })
-            let query: any = await query_datos_por_barrio(barrio.id.toString())
-            res.send(query[0])
+            try {
+                let nombre_barrio = req.body.barrio
+                let barrio = await getRepository(Barrio).findOneOrFail({ descripcion: nombre_barrio })
+                let query: any = await query_datos_por_barrio(barrio.id.toString())
+                res.send(query[0])
+            } catch (error) {
+                res.status(404).send({
+                    message: error
+                });
+            }
         });
-
 
     app.route('/datos/comuna/:id')
         .get(async function (req, res) {
@@ -251,7 +280,6 @@ module.exports = function (app: express.Application) {
                 tasacion.descripcion = tasacion.direccion
                 tasacion.usuario = await getCustomRepository(RepoUsuarios).searchById(id_usuario)
                 tasacion.validarGuardarTasacion()
-                console.log(req.body)
                 if (!req.body.barrio.id) {
                     let barrio = await getRepository(Barrio).findOneOrFail({ descripcion: req.body.barrio.descripcion })
                     tasacion.barrio = barrio
@@ -266,12 +294,12 @@ module.exports = function (app: express.Application) {
                     }
                 }
                 await getCustomRepository(RepoTasaciones).guardarTasaciones([tasacion])
+                res.sendStatus(200)
             } catch (error) {
                 res.status(400).send({
                     message: error
                 });
             }
-            res.send("OK")
         });
 
     app.route('/registrar_usuario')
@@ -282,12 +310,11 @@ module.exports = function (app: express.Application) {
                     throw "Ya existe un usuario registrado con el email " + req.body.email
                 }
                 let usuario = Usuario.fromJson(req.body)
-                console.log(req.body)
                 usuario.domicilio = req.body.direccion
                 usuario.edad = new Date().getFullYear() - new Date(req.body.fecha_nacimiento).getFullYear()
                 usuario.validar()
                 await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
-                res.send("OK")
+                res.sendStatus(200)
             } catch (error) {
                 res.status(400).send({
                     message: error
@@ -303,7 +330,7 @@ module.exports = function (app: express.Application) {
                 usuario.contrasenia = req.body.contrasenia
                 usuario.token_recuperacion = ""
                 await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
-                res.send("OK")
+                res.sendStatus(200)
             } catch (error) {
                 res.status(400).send({
                     message: error
@@ -313,141 +340,75 @@ module.exports = function (app: express.Application) {
 
     app.route('/sitios_publicacion')
         .get(async function (req, res) {
-            try {
-                let sitios_publicacion = await getRepository(SitioPublicacion).find()
-                res.send(sitios_publicacion)
-            } catch (error) {
-                res.status(400).send({
-                    message: error
-                })
-            }
+            let sitios_publicacion = await getRepository(SitioPublicacion).find()
+            res.send(sitios_publicacion)
         })
 
     app.route('/publicar_tasacion')
         .get(async function (req, res) {
             //TODO
-            res.send("OK")
+            res.sendStatus(200)
         });
 
     app.route('/barrios')
         .get(async function (req, res) {
-            try {
-                let barrios = await getRepository(Barrio).find({ order: { descripcion: "ASC" } })
-                res.send(barrios)
-            } catch (error) {
-                res.status(400).send({
-                    message: error
-                })
-            }
+            let barrios = await getRepository(Barrio).find({ order: { descripcion: "ASC" } })
+            res.send(barrios)
         })
 
     app.route('/tipos_propiedad')
         .get(async function (req, res) {
-            try {
-                let tipos_de_propiedad = await getRepository(TipoPropiedad).find()
-                res.send(tipos_de_propiedad)
-            } catch (error) {
-                res.status(400).send({
-                    message: error
-                })
-            }
+            let tipos_de_propiedad = await getRepository(TipoPropiedad).find()
+            res.send(tipos_de_propiedad)
         })
 
 
     app.route('/tipos_operacion')
         .get(async function (req, res) {
-            try {
-                let tipos_de_operacion = await getRepository(TipoOperacion).find()
-                res.send(tipos_de_operacion)
-            } catch (error) {
-                res.status(400).send({
-                    message: error
-                })
-            }
+            let tipos_de_operacion = await getRepository(TipoOperacion).find()
+            res.send(tipos_de_operacion)
         })
 
     app.route('/estados')
         .get(async function (req, res) {
-            try {
-                let estados = await getRepository(Estado).find()
-                res.send(estados)
-            } catch (error) {
-                res.status(400).send({
-                    message: error
-                })
-            }
+            let estados = await getRepository(Estado).find()
+            res.send(estados)
         })
 
     app.route('/escuelas')
         .get(async function (req, res) {
-            try {
-                let escuelas = await getRepository(Escuela).find()
-                res.send(escuelas)
-            } catch (error) {
-                res.status(400).send({
-                    message: error
-                })
-            }
+            let escuelas = await getRepository(Escuela).find()
+            res.send(escuelas)
         })
 
     app.route('/hospitales')
         .get(async function (req, res) {
-            try {
-                let hospitales = await getRepository(Hospital).find()
-                res.send(hospitales)
-            } catch (error) {
-                res.status(400).send({
-                    message: error
-                })
-            }
+            let hospitales = await getRepository(Hospital).find()
+            res.send(hospitales)
         })
 
     app.route('/comisarias')
         .get(async function (req, res) {
-            try {
-                let comisarias = await getRepository(Comisaria).find()
-                res.send(comisarias)
-            } catch (error) {
-                res.status(400).send({
-                    message: error
-                })
-            }
+            let comisarias = await getRepository(Comisaria).find()
+            res.send(comisarias)
         })
 
     app.route('/espacios-verdes')
         .get(async function (req, res) {
-            try {
-                let espacios = await getRepository(EspacioVerde).find()
-                res.send(espacios)
-            } catch (error) {
-                res.status(400).send({
-                    message: error
-                })
-            }
+            let espacios = await getRepository(EspacioVerde).find()
+            res.send(espacios)
         })
 
     app.route('/servicios')
         .get(async function (req, res) {
-            try {
-                let servicios = await getRepository(Servicio).find()
-                res.send(servicios)
-            } catch (error) {
-                res.status(400).send({
-                    message: error
-                })
-            }
+            let servicios = await getRepository(Servicio).find()
+            res.send(servicios)
         })
 
     app.route('/comunas')
         .get(async function (req, res) {
-            try {
-                let comunas = await getRepository(Comuna).find()
-                res.send(comunas)
-            } catch (error) {
-                res.status(400).send({
-                    message: error
-                })
-            }
+            let comunas = await getRepository(Comuna).find()
+            res.send(comunas)
         })
 
     app.route('/enviar_mensaje/:id')
@@ -458,7 +419,7 @@ module.exports = function (app: express.Application) {
                 let mensaje = req.body.mensaje
                 let email_service = new EmailService()
                 email_service.enviarMensaje(usuario_emisor, email_receptor, mensaje)
-                res.send("OK")
+                res.sendStatus(200)
             } catch (error) {
                 console.error(error)
                 res.status(400).send({
@@ -482,7 +443,7 @@ module.exports = function (app: express.Application) {
                 email_service.recuperarContrasenia(email, mensaje)
                 usuario.token_recuperacion = token
                 repo_usuarios.save(usuario)
-                res.send("OK")
+                res.sendStatus(200)
             } catch (error) {
                 res.status(404).send({
                     message: "Usuario no encontrado"
