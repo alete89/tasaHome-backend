@@ -6,22 +6,22 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "dev": "ts-node-dev --respawn --transpileOnly ./api/app/app.ts",
-    "prod": "tsc && node ./build/app.js"
+    "dev": "ts-node-dev --respawn --transpile-only ./api/app/app.ts",
+    "prod": "tsc && node ./build/app/app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/express": "^4.16.1",
-    "@types/node": "^12.0.3",
-    "dotenv": "^8.2.0",
+    "@types/express": "^4.17.12",
+    "@types/node": "^16.0.0",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "moment": "^2.24.0",
-    "mysql": "^2.17.1",
-    "nodemailer": "^6.2.1",
+    "moment": "^2.29.1",
+    "mysql": "^2.18.1",
+    "nodemailer": "^6.6.2",
     "reflect-metadata": "^0.1.13",
-    "ts-node-dev": "^1.0.0-pre.39",
-    "typeorm": "^0.2.17",
-    "typescript": "^3.4.5"
+    "ts-node-dev": "^1.1.8",
+    "typeorm": "^0.2.34",
+    "typescript": "^4.3.5"
   }
 }
