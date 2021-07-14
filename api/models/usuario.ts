@@ -60,8 +60,8 @@ export class Usuario {
     }
 
     validarNombreYApellido() {
-        this.validarSoloLetras(this.nombre)
-        this.validarSoloLetras(this.apellido)
+        // this.validarSoloLetras(this.nombre)
+        // this.validarSoloLetras(this.apellido)
     }
 
     validarSoloLetras(texto: String) {

@@ -16,6 +16,8 @@ export class Servicio {
     @Column("decimal", { nullable: true, precision: 20, scale: 10 })
     coeficiente: number
 
+    chequeado: boolean = false
+
     static fromJson(servicioJSON: any) {
         let servicio = Object.assign(new Servicio(), servicioJSON)
         return servicio

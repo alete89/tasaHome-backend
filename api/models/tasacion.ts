@@ -109,9 +109,9 @@ export class Tasacion {
         let tiene_agua = servicios_incluidos.includes(4)
         let tiene_electricidad = servicios_incluidos.includes(2)
         let coef_agua = 1
-        if (!tiene_agua) { coef_agua = 0.25 }
+        if (!tiene_agua) { coef_agua = 0.95 }
         let coef_elec = 1
-        if (!tiene_electricidad) { coef_elec = 0.25 }
+        if (!tiene_electricidad) { coef_elec = 0.95 }
         console.log(tiene_agua)
         console.log(tiene_electricidad)
         console.log(servicios_incluidos)

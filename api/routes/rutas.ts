@@ -117,7 +117,7 @@ module.exports = function (app: express.Application) {
             " UPPER(replace(dataset, '_', ' ')) AS descripcion" +
             " , fecha_actualizacion" +
             " , dataset" +
-            " FROM tasahome.configuracion" +
+            " FROM tasaHome.configuracion" +
             " WHERE vigente ORDER BY 1;"
             , []).catch(function (e) { console.log(e); throw e })
         return query
@@ -132,7 +132,7 @@ module.exports = function (app: express.Application) {
     const query_actualizar_dataset = async function (param_dataset: String) {
         const entityManager = getManager()
         let query = await entityManager.query(
-            "CALL actualiza_" + param_dataset + "();"
+            `CALL actualizar_dataset(?);`
             , [param_dataset])
         return query
     }
@@ -149,7 +149,6 @@ module.exports = function (app: express.Application) {
         .get(async function (req, res) {
             try {
                 let dataset = req.params.dataset
-                // await query_actualizar_dataset(dataset)
                 let query: any = await query_actualizar_dataset(dataset)
                 res.send(query)
             } catch (error) {

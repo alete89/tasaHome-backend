@@ -5206,15 +5206,26 @@ export class Bootstrap {
     }
 
     async crearUsuarios() {
+        const admin = new Usuario({
+            nombre: "Juan Carlos", apellido: "Admin", edad: 45, email: "admin@tasahome.com", genero: "Hombre", contrasenia: "admin",
+            domicilio: "Piedras 5000", fecha_nacimiento: new Date(1989,1,30),
+            esAdmin: true
+        })
+
+        const inactivo = new Usuario({
+            nombre: "Marcelo", apellido: "Tinelli", edad: 55, email: "mtinelli@tasahome.com", genero: "Hombre", contrasenia: "cabezon",
+            domicilio: "Corrientes 3150", fecha_nacimiento: new Date(1975,1,30),
+            estado:"Inactivo"
+        })
         this.juan = new Usuario({
             nombre: "Juan", apellido: "Perez", edad: 20, email: "elantra87@itgracevvx.com", genero: "Hombre", contrasenia: "123",
-            domicilio: "Laprida 4545", fecha_nacimiento: new Date()
+            domicilio: "Laprida 4545", fecha_nacimiento: new Date(1987,2,5)
         })
         this.celeste = new Usuario({
             nombre: "Celeste", apellido: "Cid", edad: 45, email: "fafecar930@advew.com", genero: "Mujer", contrasenia: "cel",
-            domicilio: "Aguero 3000", fecha_nacimiento: new Date()
+            domicilio: "Aguero 3000", fecha_nacimiento: new Date(1999,7,12)
         })
-        this.usuarios = [this.juan, this.celeste]
+        this.usuarios = [this.juan, this.celeste, admin, inactivo]
         await this.repoUsuarios.guardarUsuarios(this.usuarios)
     }
 }
