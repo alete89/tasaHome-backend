@@ -1,4 +1,4 @@
-import { Between, Brackets, EntityRepository, getConnection, In, LessThan, MoreThan, MoreThanOrEqual, Not, Repository } from "typeorm";
+import { Between, EntityRepository, In, LessThan, MoreThan, MoreThanOrEqual, Not, Repository } from "typeorm";
 import { Tasacion } from "../models/tasacion";
 declare var require: any
 

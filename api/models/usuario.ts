@@ -1,5 +1,5 @@
+import moment from "moment";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
-
 @Entity()
 export class Usuario {
 
@@ -15,9 +15,6 @@ export class Usuario {
 
     @Column()
     apellido: string
-
-    @Column()
-    edad: number
 
     @Column()
     email: string
@@ -50,13 +47,20 @@ export class Usuario {
     token_recuperacion: string
 
     validar() {
-        if (!this.nombre || !this.apellido || !this.email || !this.genero || !this.contrasenia || !this.edad) {
-            throw "Faltan campos requeridos"
-        }
+        this.validarCamposRequeridos()
         this.validarNombreYApellido()
         this.validarContrasenia()
         this.validarEdad()
 
+    }
+
+    validarCamposRequeridos() {
+        if (!this.nombre) throw "Debe ingresar nombre"
+        if (!this.apellido) throw "Debe ingresar apellido"
+        if (!this.email) throw "Debe ingresar email"
+        if (!this.genero) throw "Debe ingresar genero"
+        if (!this.contrasenia) throw "Debe ingresar contraseña"
+        if (!this.fecha_nacimiento) throw "Debe ingresar fecha de nacimiento"
     }
 
     validarNombreYApellido() {
@@ -87,6 +91,10 @@ export class Usuario {
         if (this.edad > 100) {
             throw "La edad debe ser menor a 100"
         }
+    }
+
+    get edad() {
+        return moment().diff(moment(this.fecha_nacimiento), 'years')
     }
 
     static fromJson(usuarioJson: string) {

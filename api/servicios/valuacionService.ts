@@ -19,3 +19,5 @@ export class ValuacionService {
         return query[0].valor_m2
     }
 }
+
+export const valuacionService = new ValuacionService()

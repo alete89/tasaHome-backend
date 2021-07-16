@@ -1,4 +1,5 @@
-import express = require('express');
+import express from 'express';
+import moment from 'moment';
 import { getCustomRepository, getManager, getRepository } from 'typeorm';
 import { Barrio } from '../models/barrio';
 import { Comuna } from '../models/comuna';
@@ -10,8 +11,8 @@ import { RepoTasaciones } from '../repos/repoTasaciones';
 import { RepoUsuarios } from '../repos/repoUsuarios';
 import { Estado } from '../models/estado';
 import { Servicio } from '../models/servicio';
-import { EmailService } from '../servicios/emailService';
-import { ValuacionService } from "../servicios/valuacionService";
+import { EmailService, email_service } from '../servicios/emailService';
+import { valuacionService, ValuacionService } from "../servicios/valuacionService";
 import { SitioPublicacion } from '../models/sitio_publicacion';
 import { Escuela } from '../models/escuela';
 import { Hospital } from '../models/hospital';
@@ -20,6 +21,9 @@ import { EspacioVerde } from '../models/espacio_verde';
 
 // 'use strict';
 module.exports = function (app: express.Application) {
+
+    const db = process.env.NODE_ENV == "test" ? "test" : "tasaHome"
+
 
     app.use(function (req, res, next) {
         res.header("Access-Control-Allow-Origin", "*"); // allow requests from any other server
@@ -70,6 +74,7 @@ module.exports = function (app: express.Application) {
             try {
                 res.send(await getCustomRepository(RepoUsuarios).login(req.body.email, req.body.contraseña))
             } catch (error) {
+                console.log(error)
                 res.status(400).send({
                     message: error
                 });
@@ -80,10 +85,10 @@ module.exports = function (app: express.Application) {
         const entityManager = getManager()
         let query = await entityManager.query(
             "SELECT" +
-            "(SELECT count(*) FROM tasaHome.escuela as escuela WHERE escuela.id_barrio = ?) as escuelas," +
-            "(SELECT count(*) FROM tasaHome.hospital as hospital WHERE hospital.id_barrio = ?) as hospitales," +
-            "(SELECT count(*) FROM tasaHome.comisaria as comisaria WHERE comisaria.id_barrio = ?) as comisarias," +
-            "(SELECT count(*) FROM tasaHome.espacio_verde as espacio WHERE espacio.id_barrio = ?) as espacios_verdes;"
+            "(SELECT count(*) FROM " + db + ".escuela as escuela WHERE escuela.id_barrio = ?) as escuelas," +
+            "(SELECT count(*) FROM " + db + ".hospital as hospital WHERE hospital.id_barrio = ?) as hospitales," +
+            "(SELECT count(*) FROM " + db + ".comisaria as comisaria WHERE comisaria.id_barrio = ?) as comisarias," +
+            "(SELECT count(*) FROM " + db + ".espacio_verde as espacio WHERE espacio.id_barrio = ?) as espacios_verdes;"
             , [id_barrio, id_barrio, id_barrio, id_barrio]).catch(function (e) { console.log(e); throw e })
         return query
     }
@@ -117,7 +122,7 @@ module.exports = function (app: express.Application) {
             " UPPER(replace(dataset, '_', ' ')) AS descripcion" +
             " , fecha_actualizacion" +
             " , dataset" +
-            " FROM tasaHome.configuracion" +
+            " FROM " + db + ".configuracion" +
             " WHERE vigente ORDER BY 1;"
             , []).catch(function (e) { console.log(e); throw e })
         return query
@@ -207,22 +212,35 @@ module.exports = function (app: express.Application) {
 
     app.route('/datos/comuna/:id')
         .get(async function (req, res) {
-            const entityManager = getManager()
-            let id_comuna = req.params.id
-            let query = await entityManager.query(
-                "SELECT" +
-                "(SELECT count(*) FROM tasaHome.escuela as escuela WHERE escuela.id_barrio in (select id from barrio where id_comuna = ?)) as escuelas," +
-                "(SELECT count(*) FROM tasaHome.hospital as hospital WHERE hospital.id_barrio in (select id from barrio where id_comuna = ?)) as hospitales," +
-                "(SELECT count(*) FROM tasaHome.comisaria as comisaria WHERE comisaria.id_barrio in (select id from barrio where id_comuna = ?)) as comisarias," +
-                "(SELECT count(*) FROM tasaHome.espacio_verde as espacio WHERE espacio.id_barrio in (select id from barrio where id_comuna = ?)) as espacios_verdes;"
-                , [id_comuna, id_comuna, id_comuna, id_comuna]).catch(function (e) { console.log(e); throw e })
-            res.send(query[0])
+            try {
+                const entityManager = getManager()
+                let id_comuna = req.params.id
+                let query = await entityManager.query(
+                    "SELECT" +
+                    "(SELECT count(*) FROM " + db + ".escuela as escuela WHERE escuela.id_barrio in (select id from barrio where id_comuna = ?)) as escuelas," +
+                    "(SELECT count(*) FROM " + db + ".hospital as hospital WHERE hospital.id_barrio in (select id from barrio where id_comuna = ?)) as hospitales," +
+                    "(SELECT count(*) FROM " + db + ".comisaria as comisaria WHERE comisaria.id_barrio in (select id from barrio where id_comuna = ?)) as comisarias," +
+                    "(SELECT count(*) FROM " + db + ".espacio_verde as espacio WHERE espacio.id_barrio in (select id from barrio where id_comuna = ?)) as espacios_verdes;"
+                    , [id_comuna, id_comuna, id_comuna, id_comuna]).catch(function (e) { console.log(e); throw e })
+                res.send(query[0])
+            }
+            catch (error) {
+                res.status(404).send({
+                    message: error
+                });
+            }
         });
 
     app.route('/tasacion/:id')
         .get(async function (req, res) {
-            // console.log(await getCustomRepository(RepoTasaciones).searchById(req.params.id))
-            res.send(await getCustomRepository(RepoTasaciones).searchById(req.params.id));
+            try {
+                // console.log(await getCustomRepository(RepoTasaciones).searchById(req.params.id))
+                res.send(await getCustomRepository(RepoTasaciones).searchById(req.params.id));
+            } catch (error) {
+                res.status(404).send({
+                    message: error
+                });
+            }
         });
 
     app.route('/tasaciones_similares/:id')
@@ -244,21 +262,15 @@ module.exports = function (app: express.Application) {
             res.send(await getCustomRepository(RepoTasaciones).historial_tasacion(id_tasacion))
         });
 
-    app.route('/usuarios/contactar_usuario')
-        .get(async function (req, res) {
-            res.send(await getCustomRepository(RepoUsuarios).contactar_usuario(req.body.email, req.body.mensaje));
-        });
-
     app.route('/tasar_propiedad')
         .put(async function (req, res) {
             try {
                 let tasacion = Tasacion.fromJson(req.body);
-                let valServicio = new ValuacionService()
                 tasacion.tipoDePropiedad = await getRepository(TipoPropiedad).findOneOrFail(req.body.tipoDePropiedad.id)
                 tasacion.tipoDeOperacion = await getRepository(TipoOperacion).findOneOrFail(req.body.tipoDeOperacion.id)
                 tasacion.estado = await getRepository(Estado).findOneOrFail(req.body.estado.id)
-                tasacion.validarTasarPropiedad()
-                let valorM2 = await valServicio.getValorM2(tasacion.barrio)
+                tasacion.validar()
+                let valorM2 = await valuacionService.getValorM2(tasacion.barrio)
                 console.log(valorM2)
                 let valor = tasacion.calcularValor(valorM2)
                 // tasacion.validar()
@@ -275,10 +287,10 @@ module.exports = function (app: express.Application) {
             try {
                 let id_usuario = req.params.id
                 let tasacion: Tasacion = Tasacion.fromJson(req.body);
+                tasacion.validar()
                 tasacion.fecha = new Date()
                 tasacion.descripcion = tasacion.direccion
                 tasacion.usuario = await getCustomRepository(RepoUsuarios).searchById(id_usuario)
-                tasacion.validarGuardarTasacion()
                 if (!req.body.barrio.id) {
                     let barrio = await getRepository(Barrio).findOneOrFail({ descripcion: req.body.barrio.descripcion })
                     tasacion.barrio = barrio
@@ -310,7 +322,6 @@ module.exports = function (app: express.Application) {
                 }
                 let usuario = Usuario.fromJson(req.body)
                 usuario.domicilio = req.body.direccion
-                usuario.edad = new Date().getFullYear() - new Date(req.body.fecha_nacimiento).getFullYear()
                 usuario.validar()
                 await getCustomRepository(RepoUsuarios).guardarUsuarios([usuario])
                 res.sendStatus(200)
@@ -320,7 +331,6 @@ module.exports = function (app: express.Application) {
                 });
             }
         });
-
 
     app.route('/reestablecer_contrasenia')
         .put(async function (req, res) {
@@ -342,12 +352,6 @@ module.exports = function (app: express.Application) {
             let sitios_publicacion = await getRepository(SitioPublicacion).find()
             res.send(sitios_publicacion)
         })
-
-    app.route('/publicar_tasacion')
-        .get(async function (req, res) {
-            //TODO
-            res.sendStatus(200)
-        });
 
     app.route('/barrios')
         .get(async function (req, res) {
@@ -413,10 +417,9 @@ module.exports = function (app: express.Application) {
     app.route('/enviar_mensaje/:id')
         .post(async function (req, res) {
             try {
-                let usuario_emisor: Usuario = await getCustomRepository(RepoUsuarios).searchById(req.params.id)
-                let email_receptor = req.body.email_receptor
-                let mensaje = req.body.mensaje
-                let email_service = new EmailService()
+                const usuario_emisor: Usuario = await getCustomRepository(RepoUsuarios).searchById(req.params.id)
+                const email_receptor = req.body.email_receptor
+                const mensaje = req.body.mensaje
                 email_service.enviarMensaje(usuario_emisor, email_receptor, mensaje)
                 res.sendStatus(200)
             } catch (error) {
@@ -428,7 +431,6 @@ module.exports = function (app: express.Application) {
 
         });
 
-
     app.route('/recuperar_contrasenia/')
         .post(async function (req, res) {
             try {
@@ -438,7 +440,6 @@ module.exports = function (app: express.Application) {
                 const token = (Math.random() * 10000000000000000).toString()
                 // let prueba = [...Array(30)].map(() => Math.random().toString(36)[2]).join('')
                 let mensaje = "http://localhost:4200/restablecer-contrasenia/" + token
-                let email_service = new EmailService()
                 email_service.recuperarContrasenia(email, mensaje)
                 usuario.token_recuperacion = token
                 repo_usuarios.save(usuario)

@@ -67,29 +67,34 @@ export class Tasacion {
     @JoinColumn({ name: "id_barrio" })
     barrio: Barrio
 
-    validarGuardarTasacion() {
-        this.validarCamposRequeridos()
-        this.validarAmbientes()
-        this.validarSuperficie()
-        if (!this.fecha || !this.valor || !this.usuario) {
-            throw "Tasación inválida"
-        }
-    }
-
-    validarTasarPropiedad() {
+    validar() {
         this.validarCamposRequeridos()
         this.validarAmbientes()
         this.validarSuperficie()
     }
 
     validarCamposRequeridos() {
-        if (!this.ambientes || !this.superficie || !this.estado || !this.tipoDeOperacion || !this.tipoDePropiedad) {
-            throw "Faltan campos requeridos"
+        if (this.ambientes == undefined) {
+            throw "Debe ingresar cantidad de ambientes"
+        }
+        if (!this.superficie) {
+            throw "Debe ingresar superficie"
+        }
+        if (!this.estado) {
+            throw "Debe ingresar estado"
+        }
+        if (!this.tipoDeOperacion) {
+            throw "Debe ingresar tipo de operación"
+        }
+        if (!this.tipoDePropiedad) {
+            throw "Debe ingresar tipo de propiedad"
+        }
+        if (!this.direccion) {
+            throw "Debe ingresar dirección"
         }
     }
 
     validarAmbientes() {
-
         if (this.ambientes < 1 || this.ambientes > 15) {
             throw "Los ambientes deben ser un valor entre 1 y 15"
         }
@@ -103,7 +108,6 @@ export class Tasacion {
 
     }
 
-
     calcularValor(valorM2: number) {
         let servicios_incluidos = this.servicios.map(servicio => servicio.id)
         let tiene_agua = servicios_incluidos.includes(4)
@@ -112,10 +116,7 @@ export class Tasacion {
         if (!tiene_agua) { coef_agua = 0.95 }
         let coef_elec = 1
         if (!tiene_electricidad) { coef_elec = 0.95 }
-        console.log(tiene_agua)
-        console.log(tiene_electricidad)
-        console.log(servicios_incluidos)
-        this.valor = this.superficie *
+        this.valor = Math.round(this.superficie *
             this.tipoDeOperacion.coeficiente *
             valorM2 *
             coef_agua * coef_elec * // servicios_basicos
@@ -125,7 +126,7 @@ export class Tasacion {
             this.servicios.map(servicio => servicio.coeficiente).reduce(function (total, actual) {
                 total = total * actual
                 return total
-            }, 1)
+            }, 1))
         //console.log(this.valor)
         //console.log(this)
         return this.valor

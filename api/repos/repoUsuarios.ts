@@ -20,10 +20,6 @@ export class RepoUsuarios extends Repository<Usuario> {
         }
     }
 
-    async recuperarContraseña(email: string) {
-        //TODO
-    }
-
     async searchById(id: string) {
         return await this.findOneOrFail(id)
     }
@@ -52,10 +48,6 @@ export class RepoUsuarios extends Repository<Usuario> {
         } catch (e) {
             console.log(e)
         }
-    }
-
-    async contactar_usuario(email: string, mensaje: string) {
-        //TODO
     }
 
 }

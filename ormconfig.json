@@ -1,15 +1,38 @@
-{
-    "type": "mysql",
-    "host": "localhost",
-    "port": 3306,
-    "username": "tasaHome",
-    "password": "tasaHome",
-    "database": "tasaHome",
-    "synchronize": false,
-    "logging": ["query", "error"],
-    "entities": [
-        "api/models/*.ts"
-    ],
-    "migrations": [],
-    "subscribers": []
-}
+[
+    {
+        "name": "development",
+        "type": "mysql",
+        "host": "localhost",
+        "port": 3306,
+        "username": "tasaHome",
+        "password": "tasaHome",
+        "database": "tasaHome",
+        "synchronize": false,
+        "logging": [
+            "error"
+        ],
+        "entities": [
+            "api/models/*.ts"
+        ],
+        "migrations": [],
+        "subscribers": []
+    },
+    {
+        "name": "test",
+        "type": "mysql",
+        "host": "localhost",
+        "port": 3306,
+        "username": "tasaHome",
+        "password": "tasaHome",
+        "database": "test",
+        "synchronize": false,
+        "logging": [
+            "error"
+        ],
+        "entities": [
+            "api/models/*.ts"
+        ],
+        "migrations": [],
+        "subscribers": []
+    }
+]

@@ -97,3 +97,5 @@ export class EmailService {
         }
     }
 }
+
+export const email_service = new EmailService()
